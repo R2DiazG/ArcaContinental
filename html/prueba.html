@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Impormap for bootstrap -->
+    <script type="importmap">
+        {
+          "imports": {
+            "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+            "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.esm.min.js"
+          }
+        }
+    </script>
+    <script src="html5-qrcode-master/minified/html5-qrcode.min.js"></script>
+    <title>Document</title>
+
+
+    <script type="module">
+        import * as bootstrap from 'bootstrap'
+
+        function showtoasts() {
+            // Se muestra el toast de simbología
+            const toastLiveExample = document.getElementById('liveToast')
+            const toast = new bootstrap.Toast(toastLiveExample)
+            toast.show()
+
+            // Se muestra el toast de filtros
+            const toastLiveExample2 = document.getElementById('toastFilter')
+            const toast2 = new bootstrap.Toast(toastLiveExample2)
+            toast2.show()
+        }
+        showtoasts();
+
+        function docReady(fn) {
+            // see if DOM is already available
+            if (document.readyState === "complete" || document.readyState === "interactive") {
+                // call on next available tick
+                setTimeout(fn, 1);
+            } else {
+                document.addEventListener("DOMContentLoaded", fn);
+            }
+        }
+
+        docReady(function () {
+            var resultContainer = document.getElementById('qr-reader-results');
+            var lastResult, countResults = 0;
+
+            var html5QrcodeScanner = new Html5QrcodeScanner(
+                "qr-reader", { fps: 10, qrbox: 250 });
+
+            function onScanSuccess(decodedText, decodedResult) {
+                if (decodedText !== lastResult) {
+                    ++countResults;
+                    lastResult = decodedText;
+                    console.log(`Scan result = ${decodedText}`, decodedResult);
+
+                    resultContainer.value = decodedText;
+
+                    // Optional: To close the QR code scannign after the result is found
+                    html5QrcodeScanner.clear();
+                }
+            }
+
+            // Optional callback for error, can be ignored.
+            function onScanError(qrCodeError) {
+                // This callback would be called in case of qr code scan error or setup error.
+                // You can avoid this callback completely, as it can be very verbose in nature.
+            }
+
+            //html5QrcodeScanner.render(onScanSuccess, onScanError);
+        });
+
+    </script>
+</head>
+
+<body>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="./index.html">Warehouse Visual Tree</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="./almacenar.html">Almacenar</a>
+                    <a class="nav-link" href="./intentory_table.html">Productos almacenados</a>
+                </div>
+                <!-- Selectores para filtros por fecha de caducidad proxima, frescura y tipo de producto -->
+                <div>
+                    <div class="row">
+                        <div class="col-1">
+                            <text style="text-align: center;">Filtros:</text>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <label for="caducidad">Caducidad</label>
+                            </div>
+                            <div class="row">
+                                <select id="caducidad" class="form-select form-select-sm"
+                                    aria-label=".form-select-sm example">
+                                    <option value="0">Caducidad</option>
+                                    <option value="1">Caducidad menor a 7 d&iacute;as</option>
+                                    <option value="2">Caducidad entre 8 a 30 d&iacute;as</option>
+                                    <option value="3">Caducidad mayor a 30 d&iacute;as</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <label for="caducidad">Frescura</label>
+                            </div>
+                            <div class="row">
+                                <select id="caducidad" class="form-select form-select-sm"
+                                    aria-label=".form-select-sm example">
+                                    <option value="0">Frescura</option>
+                                    <option value="1">Frescura menor a 7 d&iacute;as</option>
+                                    <option value="2">Frescura entre 8 a 30 d&iacute;as</option>
+                                    <option value="3">Frescura mayor a 30 d&iacute;as</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <label for="caducidad">categor&iacute;a</label>
+                            </div>
+                            <div class="row">
+                                <select id="caducidad" class="form-select form-select-sm"
+                                    aria-label=".form-select-sm example">
+                                    <option value="0">Categor&iacute;a</option>
+                                    <option value="1">Refrescos</option>
+                                    <option value="2">Bebidas deportivas</option>
+                                    <option value="3">Aguas</option>
+                                    <option value="4">Bebidas energ&eacute;ticas</option>
+                                    <option value="5">T&eacute; y caf&eacute;</option>
+                                    <option value="6">Bebidas lacteas y alternativas a la leche</option>
+                                    <option value="7">Jugos y bebidas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+                <img src="./images/dock_to_right.png" alt="Icono de panel de información" height="20px" width="20px">
+                Panel de informaci&oacute;n</button>
+        </div>
+    </nav>
+
+    <!-- QR -->
+    <div id="qr-reader" class="col-4"></div>
+    <input type="text" class="form-control" id="qr-reader-results" placeholder="000000">
+
+
+
+    <!--Toast de simbología-->
+    <div class="toast-container position-absolute p-3 bottom-0 end-0" id="toastPlacement">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-autohide="false">
+            <div class="toast-header">
+                <img src="./images/info_icon.png" class="rounded me-2" alt="Icono de caja de información" height="20px"
+                    width="20px">
+                <strong class="me-auto">Simbología</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <div id="simbology">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="./images/verde.jpg" alt="Icono de caja de información" height="20px" width="20px">
+                        </div>
+                        <div class="col-10">
+                            <p>Frescura menor a 7 d&iacute;as.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="./images/amarillo.jpg" alt="Icono de caja de información" height="20px"
+                                width="20px">
+                        </div>
+                        <div class="col-10">
+                            <p>Frescura entre 8 a 15 d&iacute;as.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="./images/rojo.jpg" alt="Icono de caja de información" height="20px" width="20px">
+                        </div>
+                        <div class="col-10">
+                            <p>Frescura entre 16 a 30 d&iacute;as.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="./images/gris.jpg" alt="Icono de caja de información" height="20px" width="20px">
+                        </div>
+                        <div class="col-10">
+                            <p>Frescura mayor a 31 d&iacute;as.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Toast de selección de filtro ya sea por categoría o frescura-->
+    <div class="toast-container position-absolute p-3 top-0 end-0" id="toastFilterPlacement">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="toastFilter"
+            data-bs-autohide="false">
+            <div class="toast-body">
+                Elige un parámtero para los colores de la vista 3D.
+                <div class="mt-2 pt-2 border-top">
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                        <option value="1" selected>Por frescura</option>
+                        <option value="2">Por tipo de producto</option>
+                        <option value="3">Por fecha de caducidad</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+      <!-- Tabs de tipo de vista -->
+      <!--Toast de selección de filtro ya sea por categoría o frescura-->
+      <div class="toast-container position-absolute p-3 top-0 end-3">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+            <div class="toast-body">
+                Elige un parámtero para los colores de la vista 3D.
+                
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--Form example-->
+    <div class="container">
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Default file input example</label>
+            <input class="form-control" type="file" id="formFile">
+        </div>
+        <div class="mb-3">
+            <label for="formFileMultiple" class="form-label">Multiple files input example</label>
+            <input class="form-control" type="file" id="formFileMultiple" multiple>
+        </div>
+        <div class="mb-3">
+            <label for="formFileDisabled" class="form-label">Disabled file input example</label>
+            <input class="form-control" type="file" id="formFileDisabled" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="formFileSm" class="form-label">Small file input example</label>
+            <input class="form-control form-control-sm" id="formFileSm" type="file">
+        </div>
+        <div>
+            <label for="formFileLg" class="form-label">Large file input example</label>
+            <input class="form-control form-control-lg" id="formFileLg" type="file">
+        </div>
+    </div>
+
+    <script>
+        // Función para resaltar el color de los cubos de un tipo del productionGroup
+        // Los colores se asignan por el tipo de producto que se encuentra en el nombre del objeto
+        function highlightColorByType(type) {
+            // Recorrer los hijos del productionGroup
+            for (var i = 0; i < productionGroup.children.length; i++) {
+                // Obtener el objeto hijo
+                var child = productionGroup.children[i];
+                // Obtener el nombre del objeto
+                var name = child.name;
+                // Obtener el tipo de producto
+                var line = name.split("\n")[1];
+                var productType = line.split(" ")[1].trim();
+                // Si el tipo del producto es igual al tipo que se está buscando
+                if (productType == type) {
+                    // Cambiar el color del material del objeto hijo
+                    child.material.color.setHex(0x00ff00);
+                } else {
+                    // Cambiar el color del material del objeto hijo
+                    child.material.color.setHex(0x000000);
+                }
+            }
+        }
+    </script>
+
+    <!--Form con radios de los tipos de bebidas-->
+    <form style="padding-left: 0;">
+        <div>
+        </div onclick="highlightColorByType(e.value)">
+        <input type="radio" id="bebidas deportivas" name="bebidas deportivas" value="BEBIDAS DEPORTIVAS" checked>
+        <label for="bebidas deportivas">Bebidas deportivas.</label><br>
+        <input type="radio" id="bebidas energéticas" name="bebidas energéticas" value="BEBIDAS ENERGÉTICAS">
+        <label for="bebidas energéticas">Bebidas energéticas.</label><br>
+        <input type="radio" id="aguas" name="aguas" value="AGUAS">
+        <label for="aguas">Aguas.</label><br>
+        <input type="radio" id="refrescos" name="refrescos" value="REFRESCOS">
+        <label for="refrescos">Refrescos.</label><br>
+        <input type="radio" id="tes ycafes" name="te y cafes" value="TÉ Y CAFÉS">
+        <label for="te y cafes">Té y cafés.</label><br>
+        <input type="radio" id="bebidas lacteas y alt" name="bebidas lacteas y alt"
+            value="BEBIDAS LACTEAS Y ALTERNATIVAS A LA LECHE">
+        <label for="bebidas lacteas y alt">Bebidas lacteas y alternativas a la leche.</label><br>
+        <input type="radio" id="jugos y bebidas" name="jugos y bebidas" value="JUGOS Y BEBIDAS">
+        <label for="jugos y bebidas">Jugos y bebidas.</label><br>
+    </form>
+
+
+    <!-- Tabs de tipo de vista -->
+    <div style="width: 30%; margin: auto;">
+        <ul class="nav nav-tabs" style="text-align: center; align-items: center; align-content: center;">
+            <li class="nav-item">
+                <button class="nav-link active" aria-current="page" id="caducidad-tab" onclick="changeActiveTab()">Caducidad</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" aria-current="page" id="frescura-tab" onclick="changeActiveTab()">Frescura</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" aria-current="page" id="categoria-tab" onclick="changeActiveTab()">Categor&iacute;a</button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Script con función para cambiar la tab Activa dependiendo de el button que fue presionado y desactivarlo-->
+    <script>
+        function changeActiveTab() {
+            id = event.target.id;
+            var caducidadTab = document.getElementById("caducidad-tab");
+            var frescuraTab = document.getElementById("frescura-tab");
+            var categoriaTab = document.getElementById("categoria-tab");
+            if (id == "caducidad-tab") {
+                caducidadTab.classList.add("active");
+                caducidadTab.classList.add("disabled");
+                frescuraTab.classList.remove("active");
+                frescuraTab.classList.remove("disabled");
+                categoriaTab.classList.remove("active");
+                categoriaTab.classList.remove("disabled");
+            } else if (id == "frescura-tab") {
+                caducidadTab.classList.remove("active");
+                caducidadTab.classList.remove("disabled");
+                frescuraTab.classList.add("active");
+                frescuraTab.classList.add("disabled");
+                categoriaTab.classList.remove("active");
+                categoriaTab.classList.remove("disabled");
+            } else if (id == "categoria-tab") {
+                caducidadTab.classList.remove("active");
+                caducidadTab.classList.remove("disabled");
+                frescuraTab.classList.remove("active");
+                frescuraTab.classList.remove("disabled");
+                categoriaTab.classList.add("active");
+                categoriaTab.classList.add("disabled");
+            }
+        }
+    </script>
+    <div class="btn btn-primary" 
+    style="position: absolute; top: 0; left: 0; height: 100%; width: 5px;"
+    ></div>
+    <!--Bootstrap local javascript-->
+    <script src="bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

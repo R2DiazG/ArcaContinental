@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración</title>
+    <!-- Impormap for bootstrap -->
+    <script type="importmap">
+        {
+            "imports": {
+                "@popperjs/core": "https://cdn.jsdelivr.net/npm/@"
+            }
+        }
+    </script>
+    <link href="bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--Scripts-->
+    <script type="text/javascript" src="./javascript/settings.js"></script>
+
+</head>
+
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="./index.html">WVT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Configuración</h1>
+                <h2>Medidas del Almacén</h2>
+                <form onsubmit="insertarLayout()">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="pasillos">Pasillos</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="number" name="pasillos" id="pasillos" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="largo">Largo</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="number" name="largo" id="largo" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="alto">Alto</label>
+                            </div>
+                            <div class="col-10">
+                                <input type="number" name="alto" id="alto" required>
+                            </div>
+                        </div>
+                        <input class="btn btn-primary mb-3" type="submit" value="Guardar">
+                    </div>
+                </form>
+                <h2>Importar CSV de producción</h2>
+                <div class="mb-3 col-6">
+                    <label for="formFile" class="form-label">Importar desde CSV</label>
+                    <input class="form-control" type="file" id="formFile">
+                </div>
+                <input type="button" class="btn btn-primary mb-3" value="Importar">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Se toman los valores del local storage
+        var xMin = localStorage.getItem("pasillos");
+        var yMin = localStorage.getItem("largoEspacios");
+        var zMin = localStorage.getItem("pisos");
+
+        // Se asignan los valores a los inputs
+        document.getElementById("pasillos").value = xMin;
+        document.getElementById("largo").value = yMin;
+        document.getElementById("alto").value = zMin;
+
+        // Se asignan los valores minimos a los inputs
+        document.getElementById("pasillos").min = xMin;
+        document.getElementById("largo").min = yMin;
+        document.getElementById("alto").min = zMin;
+    </script>
+</body>
+
+</html>
