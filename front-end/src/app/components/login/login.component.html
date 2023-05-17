@@ -1,0 +1,28 @@
+<div class="nav-container w-container">
+    <a href="#" class="logo w-nav-brand"><img src="assets/images/arca_logo.jpg" width="100" alt=""></a>
+    <nav role="navigation" class="nav-menu w-nav-menu">
+        <a href="#" class="nav-link w-nav-link">Home</a>
+        <a href="#" class="nav-link w-nav-link">About</a>
+        <a href="#" class="nav-link w-nav-link">Contact</a>
+    </nav>
+    <div class="w-nav-button">
+        <div class="w-icon-nav-menu"></div>
+    </div>
+<div class="container-fluid">
+    <div class="content-login col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <h2>LOGIN</h2>
+        <form #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
+            <mat-form-field class="col-xs-12">
+                <!-- <input matInput type="text" #usuarioNombre="ngModel" name="usuario" [(ngModel)]="usuarioNombre" required placeholder="Usuario" autofocus> -->
+                <input matInput type="text" #usr="ngModel" name="usuario" [(ngModel)]="usuario.usuario" required placeholder="Usuario" autofocus>
+                <mat-error *ngIf="usr.invalid">El usuario es requerido.</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-xs-12">
+                <!-- <input matInput type="password" #usuarioPassword="ngModel" name="password" [(ngModel)]="usuarioPassword" required placeholder="Contraseña"> -->
+                <input matInput type="text" #pass="ngModel" name="password" [(ngModel)]="usuario.password" required placeholder="Contraseña">
+                <mat-error *ngIf="pass.invalid">La contraseña es requerida.</mat-error>
+            </mat-form-field>
+            <button mat-raised-button class="btn-ingreso" type="submit" [disabled]="!loginForm.form.valid">INGRESAR</button>
+        </form>
+    </div>
+</div>

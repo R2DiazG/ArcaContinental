@@ -1,0 +1,31 @@
+<!-- <div class="container-fluid">
+    <div class="content-login col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <h2>LOGIN</h2>
+        <form #loginForm="ngForm" (ngSubmit)="verify()" autocomplete="off">
+            <mat-form-field class="col-xs-12"> -->
+                <!-- <input matInput type="text" #usuarioNombre="ngModel" name="usuario" [(ngModel)]="usuarioNombre" required placeholder="Usuario" autofocus> -->
+                <!-- <input matInput type="text" #usr="ngModel" name="qr" [(ngModel)]="qrid.qrid" required placeholder="QR" autofocus>
+                <mat-error *ngIf="qr.invalid">Es requerido un id de entrada.</mat-error>
+            </mat-form-field>
+            <button mat-raised-button class="btn-ingreso" type="submit" [disabled]="!loginForm.form.valid">INGRESAR</button>
+        </form>
+    </div>
+</div>
+-->
+
+
+<div class="container w-container">
+    <h1 class="heading-6">QR Entrada y Salida</h1>
+    <div class="w-form">
+        <form action="http://127.0.0.1:5000/login" method="POST" id="Login-From">
+            <!-- <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"> -->
+            <label for="id_empleado" class="field-label">QR con id:</label>
+            <input type="text" class="fields w-input" autofocus="true" maxlength="256" name="id_empleado" data-name="id_empleado" placeholder="Ingresa el id de visita escaneándolo con el lector de QR." id="id_empleado" required="">
+            <input type="submit" value="Iniciar" data-wait="Por Favor Espera..." class="submit-button w-button"></form>
+        <div class="w-form-done">
+            <div>Iniciando</div>
+        </div>
+        <div class="w-form-fail">
+            <div>Ups! Ingresaste mal o la contraseña o el usuario.</div>
+        </div>
+    </div>

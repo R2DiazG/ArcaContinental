@@ -1,0 +1,135 @@
+.content{
+    padding: 50px;
+    position: absolute;
+    top: 100px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow-y: scroll;
+    /* border: 1px solid #1f1e1e; */
+}
+.grilla{
+    padding: 4px;
+    border: 1px solid #ccc;
+}
+.content-visitantes{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+.visitante{
+    height: 140px;
+    background-size: cover;
+    background-position: center center;
+    border:  1px solid #999;
+    border-bottom: none;
+}
+.datos{
+    height: 65px;
+    width: 100%;
+    font-size: 11px;
+    padding: 10px;
+    color: #000000;
+    border: 1px solid #999;
+    border-top: none;
+    
+}
+.visitante-hover{
+    opacity: 0;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: #333;
+    display: flex;
+    overflow: hidden;
+    transition: all .2s linear;
+}
+.visitante-hover div{
+    margin: auto;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transform: scale(0);
+    opacity: 0;
+    transition: all .2s linear;
+}
+.visitante-hover mat-icon{
+    color: #fff;
+}
+.content-visitantes:hover .visitante-hover{
+    opacity: 0.8;
+}
+.content-visitantes:hover .visitante-hover div{
+    transform: scale(1);
+    opacity: 1;
+}
+.visitante-hover div:hover mat-icon{
+    background-color: #333;
+}
+.options{
+    position: absolute;
+    top:0px;
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background: #c8c2ba;
+    overflow: hidden;
+}
+.options div {
+    margin-left: 10px;
+    cursor: pointer;
+    transition: transform 1s;
+}
+.options div.add-visitante {
+    transition-delay: 10s;
+}
+.options div.crud-user {
+    transition-delay: 10s;
+}
+.add-visitante{
+    background: rgba(138,175,35,0.5);
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: auto 20px;
+    display: flex;
+    transition: all .2s linear;
+}
+.add-visitante:hover{
+    background: rgba(138,175,35,1);
+}
+.add-visitante mat-icon{
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    margin: auto;
+}
+.crud-user{
+    background: rgba(138,175,35,0.5);
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: auto 20px;
+    display: flex;
+    transition: all .2s linear;
+}
+.crud-user:hover{
+    background: rgba(138,175,35,1);
+}
+.crud-user mat-icon{
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    margin: auto;
+}

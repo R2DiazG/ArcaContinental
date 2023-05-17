@@ -1,0 +1,23 @@
+<div class="banner">
+    <div class="home" [routerLink]="['/home',1]">
+        <mat-icon>home</mat-icon>
+    </div>
+    <div class="registro" [routerLink]="['/empleado/registro']">
+        <mat-icon>add</mat-icon>
+    </div>
+    <div class="wvt" [routerLink]="['/empleado/3d']">
+        <mat-icon>search</mat-icon>
+    </div>
+        <div class="opciones-usuario">
+            <div class="datos">
+                <b>Empleado: </b>{{identity.usuario}}
+            </div>
+            <div class="logout" (click)="logout()">
+                Cerrar Sesión
+            </div>
+        </div>
+</div>
+
+<div class="content-empleado">
+    <router-outlet></router-outlet>
+</div>

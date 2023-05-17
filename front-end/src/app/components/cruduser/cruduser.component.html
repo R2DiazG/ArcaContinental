@@ -1,0 +1,62 @@
+<!-- <p>cruduser works!</p>
+<p> Con ID: {{usuarios.id}}</p>
+<div *ngFor="let usuario of usuarios">
+    {{usuario.id}} {{usuario.usuario}} {{usuario.password}} {{usuario.id_rol}} {{usuario.activo}} {{usuario.usuario_creacion}}
+</div> -->
+<!-- Creamos la vizualización del enlistado de todos los usuarios, agregamos boton de agregar, modificar, y eliminar -->
+<div class="pag">
+    <div class="usuarios" [@anim-listado]="usuarios">
+        <div class="header">
+            <div class="id">ID</div>
+            <div class="user">Usuario</div>
+            <div class="password">Contraseña</div>
+            <div class="rol">Rol</div>
+            <div class="activo">Activo</div>
+            <div class="usuario-creacion">Usuario de creación</div>
+            <div class="acciones">Acciones</div>
+        </div>
+        <div class="usuario" *ngFor="let usuario of usuarios">
+                <!-- <div class="id" id="{{usuario.id}}_div1">{{usuario.id}}</div> -->
+                <div class="id" id="{{usuario.id}}_div1" *ngIf="!editing">{{usuario.id}}</div>
+                <input class="id" id="{{usuario.id}}_div1" *ngIf="editing" type="text" [(ngModel)]="usuario.id">
+                <div class="usuarios" *ngIf="!editing">{{usuario.usuario}}</div>
+                <input class="usuarios" *ngIf="editing" type="text" [(ngModel)]="usuario.usuario">
+                <div class="password" *ngIf="!editing">{{usuario.password}}</div>
+                <input class="password" *ngIf="editing" type="text" [(ngModel)]="usuario.password">
+                <div class="rol" *ngIf="!editing">{{usuario.id_rol}}</div>
+                <input class="rol" *ngIf="editing" type="text" [(ngModel)]="usuario.id_rol">
+                <div class="activo" *ngIf="!editing">{{usuario.activo}}</div>
+                <input class="activo" *ngIf="editing" type="text" [(ngModel)]="usuario.activo">
+                <div class="usuario-creacion" *ngIf="!editing">{{usuario.usuario_creacion}}</div>
+                <input class="usuario-creacion" *ngIf="editing" type="text" [(ngModel)]="usuario.usuario_creacion">
+                <div class="acciones">
+                    <button (click)="updateUser(usuario.id)">Editar</button>
+                    <button (click)="deleteUser(usuario.id)">Eliminar</button>
+                    <button *ngIf="editing" (click)="updateUser(usuario); editing=false">Guardar</button>
+                </div>
+        </div>
+        <div class="separator"></div>
+        <div class="nuevo-usuario" *ngIf="nuevoUsuarioActivo">
+            <input class="id1" type="text" [(ngModel)]="nuevoUsuario.id" required placeholder="ID" autofocus>
+            <input class="usuarios1" type="text" [(ngModel)]="nuevoUsuario.usuario" required placeholder="Usuario">
+            <input class="password1" type="text" [(ngModel)]="nuevoUsuario.password" required placeholder="Contraseña">
+            <input class="rol1" type="text" [(ngModel)]="nuevoUsuario.id_rol" required placeholder="Rol">
+            <input class="activo1" type="text" [(ngModel)]="nuevoUsuario.activo" required placeholder="Activo">
+            <input class="usuario-creacion1" type="text" [(ngModel)]="nuevoUsuario.usuario_creacion" required placeholder="Usuario de creación">
+            <div class="acciones">
+                <button (click)="guardarUsuario()">Guardar</button>
+                <button (click)="cancelarCrearUsuario()" class="cancelar">Cancelar</button>
+            </div>
+        </div>
+        <div class="info-paginacion">
+            Mostrando {{usuarios.length}} usuarios.<!--  {{(currentPage - 1) * usersPerPage + 1}} - {{currentPage * usersPerPage > usuarios.length ? usuarios.length : currentPage * usersPerPage}} de -->
+            <br>
+            Página {{currentPage}} de {{getTotalPages()}}
+        </div>
+        <div class="pagination">
+            <button class="prev-button" [disabled]="currentPage === 1" (click)="prevPage()">Anterior</button>
+            <button class="next-button" [disabled]="currentPage === totalPages" (click)="nextPage()">Siguiente</button>
+        </div>
+        <button class="nuevo-usuario-btn" (click)="activarCrearUsuario()">Crear Usuario</button>
+    </div>
+</div>

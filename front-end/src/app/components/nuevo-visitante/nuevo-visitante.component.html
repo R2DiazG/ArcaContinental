@@ -1,0 +1,48 @@
+<!-- <div class="content">
+    <h2>Invitar visitante</h2>
+    <form #nuevoInvitado="ngForm" (ngSubmit)="agregar()">
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="nombre" [(ngModel)]="visitante.nombre" required placeholder="Nombre" autofocus>
+            <mat-error *ngIf="nombre.invaid">El nombre es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="apellido_paterno" [(ngModel)]="visitante.apellido_paterno" required placeholder="Apellido Paterno">
+            <mat-error *ngIf="apellido_paterno.invaid">El apellido paterno es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="apellido_materno" [(ngModel)]="visitante.apellido_materno" required placeholder="Apellido Materno">
+            <mat-error *ngIf="apellido_materno.invaid">El apellido materno es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="empresa_visita" [(ngModel)]="visitante.empresa_visita" required placeholder="Empresa visita">
+            <mat-error *ngIf="empresa_visita.invaid">La empresa de donde visita es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="a_quien_visita" [(ngModel)]="visitante.a_quien_visita" required placeholder="A quien visita">
+            <mat-error *ngIf="a_quien_visita.invaid">A quien visita es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="fecha_entrada" [(ngModel)]="visitante.fecha_entrada" required placeholder="Fecha entrada">
+            <mat-error *ngIf="fecha_entrada.invaid">El apellido paterno es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="fecha_salida" [(ngModel)]="visitante.fecha_salida" required placeholder="Fecha salida">
+            <mat-error *ngIf="fecha_salida.invaid">El apellido paterno es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="correo" [(ngModel)]="visitante.correo" required placeholder="Correo">
+            <mat-error *ngIf="correo.invaid">El correo es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="celular" [(ngModel)]="visitante.celular" required placeholder="Celular">
+            <mat-error *ngIf="celular.invaid">El celular es requerido.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-xs-12">
+            <input matInput type="text" name="motivo" [(ngModel)]="visitante.motivo" placeholder="Motivo">
+            <mat-error *ngIf="motivo.invaid">El motivo es requerido.</mat-error>
+        </mat-form-field>
+
+        <button [routerLink]="['/admin/list']" mat-raised-button class="btn" color="default" type="button">Cancelar</button>
+        <button [disabled]="!nuevoInvitadoForm.form.valid" mat-raised-button class="btn" color="primary" type="submit">Guardar</button>
+    </form>
+</div> -->

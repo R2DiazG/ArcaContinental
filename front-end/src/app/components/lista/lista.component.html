@@ -1,0 +1,42 @@
+<div class="options">
+    <div class="add-visitante" [routerLink]="['/admin/new']">
+        <mat-icon>add</mat-icon>
+    </div>
+    <div class="crud-user" [routerLink]="['/admin/cruduser']">
+        <mat-icon>add</mat-icon>
+    </div>
+</div>
+<div class="content" [@anim-listado]="visitantes">
+    <div class="grilla col-lg-2 col-md-3 col-sm-4" *ngFor="let visitante of visitantes">
+        <div class="content-visitante">
+            <div class="visitante" >
+            </div>
+        </div>
+        <div class="datos">
+            {{visitante.nombre}} {{visitante.apellido_paterno}} {{visitante.apellido_materno}}
+            <br>
+            Con: {{visitante.a_quien_visita}}
+            <br>
+            A: {{visitante.fecha_entrada}}
+        </div>
+        <div class="visitante-hover">
+            <div>
+                <mat-icon>create</mat-icon>
+            </div>
+        </div>
+        <!-- <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">{{visitante.nombre}}</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{visitante.apellido_paterno}}</p>
+                <p class="card-text">{{visitante.apellido_materno}}</p>
+                <p class="card-text">{{visitante.fecha_entrada}}</p>
+                <p class="card-text">{{visitante.a_quien_visita}}</p>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-danger" (click)="eliminar(visitante)">Eliminar</button>
+            </div>
+        </div> -->
+    </div>
+</div>
