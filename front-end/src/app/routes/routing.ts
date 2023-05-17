@@ -10,7 +10,8 @@ import { EmpleadoComponent } from "../components/empleado/empleado.component";
 import { FormsVisitasComponent} from "../components/forms-visitas/forms-visitas.component";
 import { QrGuardiaComponent } from "../components/qr-guardia/qr-guardia.component";
 import { CruduserComponent } from "../components/cruduser/cruduser.component";
-
+import { ListaEmpleadosComponent } from "../components/lista-empleados/lista-empleados.component";
+import { PreregistroComponent } from "../components/preregistro/preregistro.component";
 const app_routes:Routes = [
     { path: 'home/:num', component: HomeComponent },
     { path: 'admin', component: AdminComponent, canActivate: [GuardService], 
@@ -27,7 +28,8 @@ const app_routes:Routes = [
     },
     { path: 'empleado', component: EmpleadoComponent, canActivate: [GuardService],
         children: [
-            {path: 'lista', component: ListaComponent},
+            {path: 'lista', component: ListaEmpleadosComponent},
+            {path: 'preregistro', component: PreregistroComponent},
             {path: 'registro', component: FormsVisitasComponent}
         ]
     },

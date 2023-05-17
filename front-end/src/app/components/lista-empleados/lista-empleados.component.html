@@ -1,0 +1,28 @@
+<div class="options">
+    <div class="add-visitante" [routerLink]="['/empleado/preregistro']">
+        <mat-icon>add</mat-icon>
+    </div>
+    <div class="crud-user" [routerLink]="['/empleado/registro']">
+        <mat-icon>add</mat-icon>
+    </div>
+</div>
+<div class="content" [@anim-listado]="visitantes">
+    <div class="grilla col-lg-2 col-md-3 col-sm-4" *ngFor="let visitante of visitantes">
+        <div class="content-visitante">
+            <div class="visitante" >
+            </div>
+        </div>
+        <div class="datos">
+            {{visitante.nombre}} {{visitante.apellido_paterno}} {{visitante.apellido_materno}}
+            <br>
+            Con: {{visitante.a_quien_visita}}
+            <br>
+            A: {{visitante.fecha_entrada}}
+        </div>
+        <div class="visitante-hover">
+            <div>
+                <mat-icon>create</mat-icon>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,4 +7,5 @@ module.exports = (app) => {
     app.get('/api/usuarios', md_auth.auth, usuariosController.getAll);
     app.delete('/api/usuariosD/:id', md_auth.auth, usuariosController.deleteById);
     app.put('/api/usuariosM/:id', md_auth.auth, usuariosController.modifyById);
+    app.get('/api/usuarios/ultimoId', usuariosController.obtenerUltimoId);
 }

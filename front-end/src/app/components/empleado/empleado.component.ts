@@ -21,7 +21,7 @@ export class EmpleadoComponent implements CanActivate, OnInit {
   canActivate() {
     let id_rol = localStorage.getItem('id_rol');
     if (id_rol === '2') {
-      // Si el id_rol es 1, es empleado
+      // Si el id_rol es 2, es empleado
       return true;
     } else if (id_rol === '1') {
       // Si el id_rol es 1, es administrador

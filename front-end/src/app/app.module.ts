@@ -20,6 +20,8 @@ import { EmpleadoComponent } from './components/empleado/empleado.component';
 import { FormsVisitasComponent } from './components/forms-visitas/forms-visitas.component';
 import { QrGuardiaComponent } from './components/qr-guardia/qr-guardia.component';
 import { CruduserComponent } from './components/cruduser/cruduser.component';
+import { ListaEmpleadosComponent } from './components/lista-empleados/lista-empleados.component';
+import { PreregistroComponent } from './components/preregistro/preregistro.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { CruduserComponent } from './components/cruduser/cruduser.component';
     EmpleadoComponent,
     FormsVisitasComponent,
     QrGuardiaComponent,
-    CruduserComponent
+    CruduserComponent,
+    ListaEmpleadosComponent,
+    PreregistroComponent
   ],
   imports: [
     AppRouting,

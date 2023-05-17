@@ -96,10 +96,21 @@ function modifyById(req,res){
     });
 }
 
+function obtenerUltimoId(req, res) {
+    usuarios.max('id')
+    .then(ultimoId => {
+        res.status(200).json({ ultimoId });
+    })
+    .catch(err => {
+        res.status(500).send({ message: 'Error al obtener el último ID de usuario', err });
+    });
+}
+
 module.exports={
     create,
     login,
     getAll,
     deleteById,
-    modifyById
+    modifyById,
+    obtenerUltimoId
 }

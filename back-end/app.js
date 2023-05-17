@@ -2,9 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
+/* const correoRoutes = require('./routes/correo.js'); */
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
+
+/* app.use(express.json());
+app.use('/api', correoRoutes); */
 
 // Añadimos CORS para evitar problemas de acceso de dominios cruzados
 var cors = require('cors');

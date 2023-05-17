@@ -1,0 +1,67 @@
+<div class="pag">
+    <div class="container">
+        <h2>Preregistro de Visitantes</h2>
+        <form (submit)="guardarUsuario(); enviarCorreo()" class="form">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" [(ngModel)]="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" [(ngModel)]="correo" required>
+            </div>
+            <button type="submit" class="btn-submit">Enviar</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+<!-- <div class="paginas">
+    <div class="paginas-titulo">
+        <h2>Páginas</h2>
+    </div>
+    <div class="paginas-content">
+        <div class="paginas-content-item">
+            <div class="paginas-content-item-titulo">
+                <h3>Lista de Empleados</h3>
+            </div>
+            <div class="paginas-content-item-descripcion">
+                <p>En esta página se puede ver la lista de todos los empleados registrados.</p>
+            </div>
+            <div class="paginas-content-item-button">
+                <a [routerLink]="['/admin/lista']">Ir a la página</a>
+            </div>
+        </div>
+        <div class="paginas-content-item">
+            <div class="paginas-content-item-titulo">
+                <h3>Lista de Visitantes</h3>
+            </div>
+            <div class="paginas-content-item-descripcion">
+                <p>En esta página se puede ver la lista de todos los visitantes registrados.</p>
+            </div>
+            <div class="paginas-content-item-button">
+                <a [routerLink]="['/empleado/lista']">Ir a la página</a>
+            </div>
+        </div>
+        <div class="paginas-content-item">
+            <div class="paginas-content-item-titulo">
+                <h3>Preregistro de Visitantes</h3>
+            </div>
+            <div class="paginas-content-item-descripcion">
+                <p>En esta página se puede realizar el preregistro de un visitante.</p>
+            </div>
+            <div class="paginas-content-item-button">
+                <a [routerLink]="['/empleado/preregistro']">Ir a la página</a>
+            </div>
+        </div>
+        <div class="paginas-content-item">
+            <div class="paginas-content-item-titulo">
+                <h3>Registro de Empleados</h3>
+            </div>
+            <div class="paginas-content-item-descripcion">
+                <p>En esta página se puede realizar el registro de un empleado.</p>
+            </div>
+            <div class="paginas-content-item-button">
+                <a [routerLink]="['/empleado/registro']">Ir a la página</a> -->

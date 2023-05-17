@@ -86,4 +86,18 @@ export class UsersService {
         return null;
       });
     }
+    getUltimoId() {
+      return this.http.get(this.url + 'usuarios/ultimoId')
+        .toPromise()
+        .then(res => {
+          if (res) {
+            console.log("AQUIIII");
+            console.log(res);
+            console.log(JSON.parse(JSON.stringify(res)))
+            return JSON.parse(JSON.stringify(res));
+          }
+          return null;
+        });
+    }    
 }
+

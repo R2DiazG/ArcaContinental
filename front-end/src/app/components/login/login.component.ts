@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
         if(response.usuario.id_rol === 1){
           this._router.navigate(['/admin/lista']);
         }else if(response.usuario.id_rol === 2){
-          this._router.navigate(['/empleado']);
+          this._router.navigate(['/empleado/lista']);
         }else if(response.usuario.id_rol === 3){
           this._router.navigate(['/guardia/qr']);
         }
