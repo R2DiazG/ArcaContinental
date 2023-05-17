@@ -9,18 +9,18 @@
 \
 -- DROP TABLE IF EXISTS public.usuarios;\
 \
-CREATE TABLE IF NOT EXISTS public.usuarios\
-(\
-    id integer NOT NULL,\
-    usuario character varying(100) COLLATE pg_catalog."default" NOT NULL,\
-    password character varying(50) COLLATE pg_catalog."default" NOT NULL,\
-    id_rol integer NOT NULL,\
-    activo boolean NOT NULL,\
-    usuario_creacion character varying(100) COLLATE pg_catalog."default" NOT NULL,\
-    "createdAt" timestamp(4) with time zone NOT NULL,\
-    "updatedAt" timestamp(4) with time zone NOT NULL,\
-    CONSTRAINT usuarios_pkey PRIMARY KEY (id)\
-)\
+CREATE TABLE IF NOT EXISTS public.usuarios
+(
+    id integer NOT NULL,
+    usuario character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    password character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    id_rol integer NOT NULL,
+    activo boolean NOT NULL,
+    usuario_creacion character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "createdAt" timestamp(4) with time zone NOT NULL,
+    "updatedAt" timestamp(4) with time zone NOT NULL,
+    CONSTRAINT usuarios_pkey PRIMARY KEY (id)
+)
 \
 TABLESPACE pg_default;\
 \
