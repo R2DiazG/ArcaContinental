@@ -8,3 +8,5 @@ front-end/.angular/cache/15.2.5/babel-webpack/94ee07fcd9dbe103b80b6c102757663f6b
 *.json
 *.json
 front-end/node_modules/__ngcc_entry_points__.json
+front-end/node_modules/__ngcc_entry_points__.json
+*.json
