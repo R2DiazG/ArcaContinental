@@ -3,3 +3,8 @@ front-end/node_modules/.cli-ngcc/40abb211ec457a5da9e71333d5d9b967151a61794930b0b
 front-end/node_modules/__ngcc_entry_points__.json
 front-end/node_modules/__ngcc_entry_points__.json
 front-end/.angular/cache/15.2.5/babel-webpack/94ee07fcd9dbe103b80b6c102757663f6b0625f9e170c8f6f2f567a218b2e8b7.json
+*.json
+*.pack
+*.json
+*.json
+front-end/node_modules/__ngcc_entry_points__.json
