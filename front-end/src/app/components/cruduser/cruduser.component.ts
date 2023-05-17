@@ -83,7 +83,6 @@ export class CruduserComponent implements OnInit{
       this.getUsers();
     }
   }
-
   // Función para eliminar un usuario
   deleteUser(id:string) {
     console.log(this.token);
@@ -100,11 +99,9 @@ export class CruduserComponent implements OnInit{
         });
     }
   }
-
   startEditing() {
     this.editing = true;
   }
-  
   updateUser(id:any) {
     console.log(this.token);
     if (this.token !== null) {
@@ -119,13 +116,10 @@ export class CruduserComponent implements OnInit{
     }
   }
   
-
   public nuevoUsuarioActivo = false;
-
   activarCrearUsuario() {
     this.nuevoUsuarioActivo = true;
   }
-
   cancelarCrearUsuario() {
     this.nuevoUsuarioActivo = false;
     this.nuevoUsuario = {

@@ -13,8 +13,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PreregistroComponent {
   public token: string | null;
-  nombre: string = '';
-  correo: string = '';
+  public nombre: string = '';
+  public correo!: string;
   public url:string;
 
   constructor(
@@ -38,14 +38,17 @@ export class PreregistroComponent {
         const idUltimoUsuario = parseInt(JSON.parse(ultimoId.ultimoId));
         console.log(idUltimoUsuario);
         // Crea el objeto de usuario con los datos necesarios
+        console.log(this.correo);
+        console.log(this.nombre);
         const nuevoUsuario = {
           id: idUltimoUsuario + 1, // Incrementa el ID del último usuario
           usuario: this.correo.split('@')[0], // Utiliza el string antes del '@' como nombre de usuario
           password: '123',
           id_rol: 4, // Rol de invitado
           activo: true,
-          creado_por: nombreUsuarioCreador
+          usuario_creacion: usuarioCreador
         };
+        console.log(nuevoUsuario);
         // Verifica que el token esté disponible
         if (this.token !== null) {
           this._serviceUsers.createUser(nuevoUsuario, this.token)
@@ -86,7 +89,7 @@ export class PreregistroComponent {
       });
 
     // Restablece los campos del formulario
-    this.nombre = '';
-    this.correo = '';
+    /* this.nombre = '';
+    this.correo = ''; */
   }
 }

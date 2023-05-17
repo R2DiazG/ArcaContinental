@@ -4,11 +4,11 @@
         <form (submit)="guardarUsuario(); enviarCorreo()" class="form">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" [(ngModel)]="nombre" required>
+                <input type="text" id="nombre" [(ngModel)]="nombre" name="nombre" required>
             </div>
             <div class="form-group">
                 <label for="correo">Correo:</label>
-                <input type="email" id="correo" [(ngModel)]="correo" required>
+                <input type="email" id="correo" [(ngModel)]="correo" name="correo" required>
             </div>
             <button type="submit" class="btn-submit">Enviar</button>
         </form>
