@@ -16,6 +16,7 @@ export class CruduserComponent implements OnInit{
   public usuarios:any = [];
   public url:string;
   public editing = false;
+  public filtroRol: number | null = null;
   public nuevoUsuario = {
     id: '',
     usuario: '',
@@ -44,10 +45,16 @@ export class CruduserComponent implements OnInit{
     if (this.token !== null) {
       this._serviceUsers.getUsers(this.token)
         .then(response => {
+          // Filtrar usuarios por rol si se ha seleccionado un valor de filtroRol
+          if (this.filtroRol !== 0) {
+            this.usuarios = response.usuarios.filter((usuario: { id_rol: { toString: () => number | null; }; }) => usuario.id_rol.toString() === this.filtroRol);
+          } else {
+            this.usuarios = response.usuarios;
+          }
           // Seteamos la lista de usuarios
-          this.usuarios = response.usuarios.slice((this.currentPage - 1) * this.usersPerPage, this.currentPage * this.usersPerPage);
+          this.usuarios = this.usuarios.slice((this.currentPage - 1) * this.usersPerPage, this.currentPage * this.usersPerPage);
           // Calculamos el total de páginas
-          this.totalPages = Math.ceil(response.usuarios.length / this.usersPerPage);
+          this.totalPages = Math.ceil(this.usuarios.length / this.usersPerPage);
           console.log("RESPUESTA DEL SERVIDOR");
           console.log(response);
           console.log("VALORES");
@@ -57,7 +64,8 @@ export class CruduserComponent implements OnInit{
           console.log(error);
         });
     }
-  }
+}
+
   getTotalPages() {
     return this.totalPages;
   }

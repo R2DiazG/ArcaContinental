@@ -101,4 +101,18 @@
   .nuevo-usuario button.cancelar {
     background-color: red;
   }
+  .filtro-rol {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-left: 30px;
+  }
+  
+  .filtro-rol label {
+    margin-right: 5px;
+  }
+  
+  .filtro-rol select {
+    padding: 5px;
+  }
   
