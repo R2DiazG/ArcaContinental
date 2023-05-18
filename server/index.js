@@ -3,7 +3,7 @@ const express = require('express'); //llamamos a Express
 const app = express();
 const port = process.env.PORT || 3001;  // establecemos nuestro puerto
 
-const db = require('./db');
+const db = require('./db'); 
 
 //Importamos body-parser para analizar los cuerpos de las solicitudes entrantes como middleware.
 const bodyParser = require('body-parser');
