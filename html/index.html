@@ -7,6 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="./css/index.css">
   <link href="bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Estilo para ocultar los textos */
+    .hidden {
+      display: none;
+    }
+  </style>
+
   <!-- Impormap for bootstrap -->
   <script type="importmap">
     {
@@ -105,7 +113,8 @@
                 <label for="caducidadSelector">Subcategoría</label>
               </div>
               <div class="row">
-                <select id="subcategoriaSelector" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <select id="subcategoriaSelector" class="form-select form-select-sm"
+                  aria-label=".form-select-sm example">
                   <option value="0">Seleccionar</option>
                 </select>
               </div>
@@ -121,8 +130,8 @@
     </div>
   </nav>
   <!-- Offcanvas -->
-  <div class="offcanvas offcanvas-start show" style="margin-top: 71px;" data-bs-scroll="true" data-bs-backdrop="false"
-    tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas offcanvas-start show" style="margin-top: 71px; max-width: 315px;" data-bs-scroll="true"
+    data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Informaci&oacute;n del paquete </h5>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -134,27 +143,28 @@
 
   <!--Toast de selección de filtro ya sea por categoría o frescura-->
 
-  <div class="col-2" style="margin: auto;">
+  <div class="col-2" style="margin: auto; ">
     <div class="position-absolute bottom-0" id="toastFilterPlacement" style="margin: auto;">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <button class="nav-link active" aria-current="page" id="frescura-tab">Frescura</button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" aria-current="page" id="categoria-tab">Categor&iacute;a</button>
-          </li>
-        </ul>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <button class="nav-link active" aria-current="page" id="frescura-tab">Frescura</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" aria-current="page" id="categoria-tab">Categor&iacute;a</button>
+        </li>
+      </ul>
     </div>
   </div>
 
   <!--Symbols Toast-->
   <div class="toast-container position-absolute p-3 bottom-0 end-0" id="toastPlacement">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false"
+      style="width: 50px;">
       <div class="toast-header">
         <img src="./images/info_icon.png" class="rounded me-2" alt="Icono de caja de información" height="20px"
           width="20px">
-        <strong class="me-auto">Simbología</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        <strong class="me-auto hidden">Simbología</strong>
+        <button type="button" class="btn-close hidden" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
         <div id="simbology">
@@ -163,7 +173,7 @@
               <div class="color-symbology" style="background-color: #adff99;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura menor a 7 d&iacute;as.</p>
+              <p class="hidden">Frescura menor a 7 d&iacute;as.</p>
             </div>
           </div>
           <div class="row">
@@ -171,7 +181,7 @@
               <div class="color-symbology" style="background-color: #e8f558;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura entre 8 a 30 d&iacute;as.</p>
+              <p class="hidden">Frescura entre 8 a 30 d&iacute;as.</p>
             </div>
           </div>
           <div class="row">
@@ -179,7 +189,7 @@
               <div class="color-symbology" style="background-color: #fa6e02;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura entre 31 a 60 d&iacute;as.</p>
+              <p class="hidden">Frescura entre 31 a 60 d&iacute;as.</p>
             </div>
           </div>
           <div class="row">
@@ -187,7 +197,7 @@
               <div class="color-symbology" style="background-color: #de0404;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura mayor a 61 d&iacute;as.</p>
+              <p class="hidden">Frescura mayor a 61 d&iacute;as.</p>
             </div>
           </div>
         </div>
@@ -195,12 +205,46 @@
     </div>
   </div>
   <div class="offCanvasTrigger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-  aria-controls="offcanvasScrolling"
-  ></div>
-
-
-
+    aria-controls="offcanvasScrolling"></div>
   <script src="bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var simbology = document.getElementById("liveToast");
+      var paragraphs = simbology.getElementsByTagName("p");
+
+      simbology.addEventListener("mouseover", function() {
+        for (var i = 0; i < paragraphs.length; i++) {
+          paragraphs[i].classList.remove("hidden");
+        }
+        // Ajustar el width del toast a 300px
+        var toast = document.getElementById("liveToast");
+        toast.style.width = "300px";
+
+        // Mostrar el elemento strong y el botón de cerrar
+        var strong = document.querySelector("#liveToast strong");
+        strong.classList.remove("hidden");
+        var button = document.querySelector("#liveToast button");
+        button.classList.remove("hidden");
+
+      });
+
+      simbology.addEventListener("mouseout", function() {
+        for (var i = 0; i < paragraphs.length; i++) {
+          paragraphs[i].classList.add("hidden");
+        }
+        // Ajustar el width del toast a 50px
+        var toast = document.getElementById("liveToast");
+        toast.style.width = "50px";
+
+        // Ocultar el elemento strong y el botón de cerrar
+        var strong = document.querySelector("#liveToast strong");
+        strong.classList.add("hidden");
+        var button = document.querySelector("#liveToast button");
+        button.classList.add("hidden");
+      });
+    });
+  </script>
 
 </body>
 

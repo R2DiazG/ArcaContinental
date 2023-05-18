@@ -465,7 +465,16 @@ function makeColorInstance(bW, bH, bD, color, x, y, z, location_no, item_no, des
     var freshness = Math.ceil(diff / (1000 * 3600 * 24));
 
     // Se agrega el nombre del producto al cubo con la informacion de la base de datos
-    cube.name = "No. Item: " + item_no + "\nDescripción: " + description + "\nCategoria: " + category + "\nFrescura: " + freshness + " días \nFabricación: " + manufacturingDate + "\nCaducidad: " + expiration + "\nNombre de la ubicación: " + location_no + "\n X: " + x + "\n Y: " + y + "\n Z: " + z + "\n";
+    cube.name = "No. Item: " + item_no 
+    + "\nDescripción: " + description 
+    + "\nCategoria: " + category 
+    + "\nFrescura: " + freshness 
+    + " días \nFabricación: " + manufacturingDate 
+    + "\nCaducidad: " + expiration 
+    + "\nCódigo de la ubicación: " + location_no 
+    + "\n Pasillo: " + parseInt(x/138+1)
+    + "\n Anaquel: " + parseInt(z/58+1)
+    + "\n Piso: " + parseInt(y/60+1) + "\n";
     //se posiciona el cubo en los valores de x, y, z
     cube.position.set(x, y, z);
     return cube;
@@ -844,7 +853,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #644685;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Refresco/Gaseosa</p>'
+            + '<p class="hidden">Refresco/Gaseosa</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -852,7 +861,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #3498db;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Aguas Purificadas/Sabores</p>'
+            + '<p class="hidden">Aguas Purificadas/Sabores</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -860,7 +869,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #2ecc71;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Bebidas fruta/soya/soja</p>'
+            + '<p class="hidden">Bebidas fruta/soya/soja</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -868,7 +877,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #f1c40f;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Energéticas/Deportivas</p>'
+            + '<p class="hidden">Energéticas/Deportivas</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -876,7 +885,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #9b59b6;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Tés</p>'
+            + '<p class="hidden">Tés</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -884,7 +893,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #1abc9c;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Vitaminadas</p>'
+            + '<p class="hidden">Vitaminadas</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -892,7 +901,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #95a5a6;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Café</p>'
+            + '<p class="hidden">Café</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -900,7 +909,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color: #34495e;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Leche</p>'
+            + '<p class="hidden">Leche</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -908,7 +917,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology" style="background-color:#27ae60;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Yogurt</p>'
+            + '<p class="hidden">Yogurt</p>'
             + '</div>'
             + '</div>'
             + '<div class="row">'
@@ -916,7 +925,7 @@ const colorDulces = "0x2c3e50";
             + '<div class="color-symbology"  style="background-color: #f39c12;"></div>'
             + '</div>'
             + '<div class="col-10">'
-            + '<p>Papas fritas</p>'
+            + '<p class="hidden">Papas fritas</p>'
             + '</div>'
             + '</div>'
             + '</div>'
