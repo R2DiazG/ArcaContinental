@@ -1351,3 +1351,4 @@ front-end/.angular/cache/15.2.5/babel-webpack/ffd5147c8b3119aa4dcb2ef8e13b26a753
 front-end/.angular/cache/15.2.5/babel-webpack/938fd73f1f08d117e8222d5f1f53d883ac0febe7cc982e9234a1299367580d0e.json
 *.json
 *.pack
+*.old
