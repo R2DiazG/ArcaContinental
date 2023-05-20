@@ -28,6 +28,9 @@
   <!-- Importación de modulo de visualización 3D -->
   <script type="module" src="./javascript/visualizer.js"></script>
 
+  <!-- Importar script almacenar.js -->
+  <script type="text/javascript" src="./javascript/almacenar.js"></script>
+
   <script>
     // Comprueba si existe el param "id" en la URL
     function getParamId() {
@@ -111,13 +114,27 @@
               </select>
             </div>
           </div>
+          <!--Label y campo de texto para barra de busqueda-->
+          <div class="col-2">
+            <div class="col-1">
+              <text style="text-align: center;">Buscar:</text>
+            </div>
+            <div class="col">
+              <div class="row">
+                <input type="text" id="searchBar" class="form-control form-control-sm"
+                  aria-label=".form-control-sm example" placeholder="Término..." data-bs-toggle="modal"
+                  data-bs-target="#exampleModal" readonly>
+              </div>
+            </div>
+          </div>
         </div>
+        <!--Barra de busqueda-->
       </div>
       <!-- Botón de menú hamburguesa -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
         aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" id="burgerButton">
         <span class="navbar-toggler-icon" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-        aria-controls="offcanvasScrolling"></span>
+          aria-controls="offcanvasScrolling"></span>
       </button>
       <!-- Links de navegación -->
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -130,8 +147,9 @@
     </div>
   </nav>
   <!-- Offcanvas -->
-  <div class="sticky-top offcanvas offcanvas-start show" style="margin-top: 0; max-width: 315px; height: 578px;" data-bs-scroll="true"
-    data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="sticky-top offcanvas offcanvas-start show" style="margin-top: 0; max-width: 315px; height: 578px;"
+    data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling"
+    aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Informaci&oacute;n del paquete </h5>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -206,8 +224,30 @@
   <div class="offCanvasTrigger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
     aria-controls="offcanvasScrolling">
     <div class="offCanvasTrigger" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"></div>
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"></div>
   </div>
+  <!--Modal de bootstrap-->
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!--Colocar aquí el contenido de almacenar.html-->
+          <!--    Formulario  -->
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var simbology = document.getElementById("liveToast");
