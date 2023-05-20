@@ -51,7 +51,6 @@ function main() {
             var pasillos = dimensiones.X_LENGHT;
             var largoEspacios = dimensiones.Y_LENGHT;
             var pisos = dimensiones.Z_LENGHT;
-            console.log("pasillos: " + pasillos + " largoEspacios: " + largoEspacios + " pisos: " + pisos);
             // Guardar en el local storage
             localStorage.setItem("pasillos", pasillos);
             localStorage.setItem("largoEspacios", largoEspacios);
@@ -573,7 +572,6 @@ async function getWarehouseDimensions(callback) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             // Se obtiene la respuesta del servidor
-            console.log("...Se obtienen las dimensiones del almacen");
             var response = xhr.responseText;
             // Se parsea la respuesta a un objeto JSON
             var warehouseDimensions = JSON.parse(response);
@@ -1174,7 +1172,6 @@ function highlightByCategory(categoryValue) {
 }
 
 function highlightByCategoryAndSubcategory(expirationValue, categoryValue) {
-    console.log("expirationValue: " + expirationValue + " categoryValue: " + categoryValue)
     // determinar los días de caducidad mínimos y máximos
     let [minExpDays, maxExpDays] = getExpirationLimits(expirationValue);
     // Recorrer los hijos del productionGroup
@@ -1392,21 +1389,21 @@ document.getElementById("categoriaSelector").addEventListener("change", function
     const toast = new bootstrap.Toast(toastLiveExample)
     // La opción seleccionada debe ser mayor a 0
     if (catSelectedValue == 0) {
+
+        // Remover todas las opciones del select de subcategoriaSelector
+        resetDefaultSubcategoriaSelector();
+
         if (freshnessSelectorVal == 0 && subcategorySelectVal == 0) {
             changeAllColorsByFreshness();
             toast.show();
         } else if (freshnessSelectorVal == 0 && subcategorySelectVal != 0) {
-            // cambiar subcategoriaSelector a la opcion 0
-            document.getElementById("subcategoriaSelector").value = 0;
             changeAllColorsByFreshness();
         } else if (freshnessSelectorVal != 0 && subcategorySelectVal == 0) {
             changeAllColorsToWhite();
             highlightByFreshness(freshnessSelectorVal);
         } else if (freshnessSelectorVal != 0 && subcategorySelectVal != 0) {
-            //cambar subcategoriaSelector a la opcion 0
-            document.getElementById("subcategoriaSelector").value = 0;
             changeAllColorsToWhite();
-            changeAllColorsByFreshness();
+            highlightByFreshness(freshnesSelectedValue);
         }
 
     } else {
@@ -1415,14 +1412,19 @@ document.getElementById("categoriaSelector").addEventListener("change", function
         if (freshnessSelectorVal == 0 && subcategorySelectVal == 0) {
             updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
         } else if (freshnessSelectorVal == 0 && subcategorySelectVal != 0) {
+            resetDefaultSubcategoriaSelector();
+            updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
             changeAllColorsToWhite();
-            highlightByCategoryAndSubcategory(subcategorySelectVal, catSelectedValue);
+            highlightByCategory(catSelectedValue);
         } else if (freshnessSelectorVal != 0 && subcategorySelectVal == 0) {
+            updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
             changeAllColorsToWhite();
             highlightByFreshnessAndCategory(freshnessSelectorVal, catSelectedValue);
         } else if (freshnessSelectorVal != 0 && subcategorySelectVal != 0) {
+            resetDefaultSubcategoriaSelector();
+            updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
             changeAllColorsToWhite();
-            highlightByFreshnessAndCategoryAndSubcategory(subcategorySelectVal, freshnessSelectorVal, catSelectedValue);
+            highlightByFreshnessAndCategory(freshnessSelectorVal, catSelectedValue);
         }
     }
 });
@@ -1447,6 +1449,14 @@ function updateSubcategoriaSelector(callback, catSelectedValue) {
     changeAllColorsToWhite();
     highlightByCategory(catSelectedValue);
 }
+
+// Función para eliminar los elementos de un select subcategoriaSelector y agregar la opción "Seleccionar"
+function resetDefaultSubcategoriaSelector() {
+    // Remover todas las opciones del select de subcategoriaSelector
+    document.getElementById("subcategoriaSelector").value = 0;
+    document.getElementById("subcategoriaSelector").options.length = 1;
+}
+
 
 // Funcion para recuperar los SIZE de los productos de una categoria
 // Recibe un numero la categoria
@@ -1507,12 +1517,8 @@ function getCategoryById(category) {
 
 }
 function appendSubcategoryOptions(sizes) {
-    // Eliminar todas las opciones del select de subcategoriaSelector excepto la primera
     var select = document.getElementById("subcategoriaSelector");
-    var length = select.options.length;
-    for (i = length - 1; i > 0; i--) {
-        select.options[i] = null;
-    }
+
     // Regresar el select a su valor por defecto
     select.value = 0;
 
@@ -1573,7 +1579,6 @@ function getExpirationDays(cubo) {
     // Calcular los días faltantes para la caducidad del producto
     var date = new Date();
     var today = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-    console.log("today: " + today);
     var todayDate = new Date(today);
     let fixDate = expirationDate.split('/');
     var expirationFixedDate = fixDate[2] + '/' + fixDate[1] + '/' + fixDate[0];
