@@ -25,11 +25,155 @@
     }
   </script>
 
+  <!--CSS de paginación-->
+  <link href="DataTables/datatables.min.css" rel="stylesheet" />
+
+  <script src="javascript/jQuery/jquery-3.6.4.js"></script>
+
+  <script src="DataTables/datatables.min.js"></script>
+
+  <script type="module" src="./javascript/inventory_table.js"></script>
+
+  <script type="text/javascript">
+    const API_URL = 'http://localhost:3001/api/';
+    // Funcion para eliminar la relacion entre el layout y la produccion, recibe como parametro elnoItem
+    // antes de borrar se pidio confirmacion al usuario
+    function deleteProductLocation(noItem) {
+      var confirmacion = confirm("¿Está seguro de eliminar el producto " + noItem + "?");
+      if (confirmacion) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', API_URL + 'eliminar', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({ noItem: noItem }));
+        xhr.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            var tr = document.getElementById('tr_' + noItem);
+            tr.parentNode.removeChild(tr);
+            window.alert("Producto eliminado");
+          }
+        }
+      }
+    }
+    //Funcion para cuando el usuario de click en el boton de editar, recibe como parametro el noItem
+    //dentro de los td de la fila se inserta un input para que el usuario pueda editar la solamente la ubicacion
+    //y se cambia el boton de editar por un boton de guardar
+    var oldValue = '';
+    function editProductLocation(noItem) {
+      var td = document.getElementById('td2_' + noItem);
+      //guardamos el valor del td2 por si el usuario cancela la edicion
+      oldValue = td.innerText;
+      //insertamos un input en el td2
+      td.innerHTML = '<input type="text" id="input_' + noItem + '" value="' + td.innerText + '">';
+      //obtenemos el td7 donde estan los botones de editar, eliminar y ver
+      var td7 = document.getElementById('td7_' + noItem);
+      // ocultamos los botones
+      td7.children[0].style.display = 'none';
+      td7.children[1].style.display = 'none';
+      td7.children[2].style.display = 'none';
+      // mostramos los botones de guardar y cancelar
+      td7.children[3].style.display = 'inline';
+      td7.children[4].style.display = 'inline';
+    }
+    //Funcion para cuando el usuario de click en el boton de cancelar, recibe como parametro el noItem
+    //dentro de los td de la fila se inserta el valor original de la ubicacion
+    //y se cambia el boton de guardar por un boton de editar
+    function cancelEditProductLocation(noItem) {
+      // obtenemos el td2 donde esta el input
+      var td = document.getElementById('td2_' + noItem);
+      // insertamos el valor original del td2
+      td.innerText = oldValue;
+      //obtenemos el td7 donde estan los botones de editar, eliminar y ver
+      var td7 = document.getElementById('td7_' + noItem);
+      // ocultamos los botones de guardar y cancelar
+      td7.children[3].style.display = 'none';
+      td7.children[4].style.display = 'none';
+      // mostramos los botones de editar y eliminar
+      td7.children[0].style.display = 'inline';
+      td7.children[1].style.display = 'inline';
+      td7.children[2].style.display = 'inline';
+    }
+    //Funcion para cuando el usuario de click en el boton de guardar, recibe como parametro el noItem
+    //dentro de los td de la fila se inserta el nuevo valor de la ubicacion
+    //y se cambia el boton de guardar por un boton de editar
+    function saveProductLocation(noItem) {
+      var td = document.getElementById('td2_' + noItem);
+      var input = document.getElementById('input_' + noItem);
+      //Si el input esta vacio se muestra un mensaje de error
+      //INPUT VACIO
+      if (input.value == '') {
+        window.alert("El campo de ubicación no puede estar vacío");
+        // Se comprueba que el valor del input sea diferente al valor original
+        //INPUT DIFERENTE AL ORIGINAL
+      } else if (input.value != oldValue) {
+        // Se consulta la API para revisar si la ubicacion existe en el layout
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', API_URL + 'layout/' + input.value, true);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            // Si la ubicacion existe se actualiza el valor en la base de datos
+            // UBICACION EXISTE
+            if (this.response.length != 2) { //2 es el tamaño de un array vacio
+              // Se consulta la API para saber si la ubicacion esta ocupada
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', API_URL + 'layout_disponibility/' + input.value, true);
+              xhr.send();
+              xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                  // Si la ubicacion esta ocupada se muestra un mensaje de error
+                  // UBICACION OCUPADA
+                  if (this.response.length != 2) {
+                    window.alert("La ubicación ya está ocupada por el producto " + this.responseText[0].ITEM_NO);
+                    // Si la ubicacion no esta ocupada se actualiza el valor en la base de datos
+                    // UBICACION LIBRE:
+                  } else {
+                    //Se hace una peticion PUT para actualizar la ubicacion
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('PUT', API_URL + 'editar', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    let data = `{ "noItem": ` + noItem + `, "newLocation": "` + input.value + `" } `;
+                    xhr.send(data);
+                    xhr.onreadystatechange = function () {
+                      if (this.readyState == 4 && this.status == 200) {
+                        td.innerText = input.value;
+                        //obtenemos el td7 donde estan los botones de editar y eliminar
+                        var td7 = document.getElementById('td7_' + noItem);
+                        // ocultamos los botones de guardar y cancelar|
+                        td7.children[3].style.display = 'none';
+                        td7.children[4].style.display = 'none';
+
+                        // mostramos los botones de editar y eliminar
+                        td7.children[0].style.display = 'inline';
+                        td7.children[1].style.display = 'inline';
+                        td7.children[2].style.display = 'inline';
+
+                        // Recargar la página tras mostrar el mensaje de éxito y actualizar la ubicación
+                        window.alert("Producto actualizado");
+                        view3dProductLocation(noItem);
+                      }
+                    }
+                  }
+                }
+              }
+            } else {
+              window.alert("La ubicación no existe en el layout");
+            }
+          }
+        }
+      } else {
+        alert("No se ha realizado ningún cambio");
+      }
+    }
+    //Funcion para cuando el usuario de click en el boton de ver en 3D, recibe como parametro el noItem
+    //Se manda el noItem a la pagina de 3D a trvés de cookies
+    function view3dProductLocation(noItem) {
+      document.cookie = "noItem=" + noItem;
+      window.location.href = "./index.html";
+    }
+  </script>
+
   <!-- Importación de modulo de visualización 3D -->
   <script type="module" src="./javascript/visualizer.js"></script>
-
-  <!-- Importar script almacenar.js -->
-  <script type="text/javascript" src="./javascript/almacenar.js"></script>
 
   <script>
     // Comprueba si existe el param "id" en la URL
@@ -187,7 +331,7 @@
         <div id="simbology">
           <div class="row">
             <div class="col-2">
-              <div class="color-symbology" style="background-color: #adff99;"></div>
+              <div class="color-symbology" style="background-color: #0e8c03;"></div>
             </div>
             <div class="col-10">
               <p class="hidden">Frescura menor a 7 d&iacute;as.</p>
@@ -195,7 +339,7 @@
           </div>
           <div class="row">
             <div class="col-2">
-              <div class="color-symbology" style="background-color: #e8f558;"></div>
+              <div class="color-symbology" style="background-color: #8c7d03;"></div>
             </div>
             <div class="col-10">
               <p class="hidden">Frescura entre 8 a 30 d&iacute;as.</p>
@@ -229,15 +373,48 @@
   <!--Modal de bootstrap-->
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Lista de productos</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!--Colocar aquí el contenido de almacenar.html-->
-          <!--    Formulario  -->
+          <!--Incrustar aquí el contenido de inventory_table.html-->
+          <div class="row">
+            <div class="col" style="margin-bottom: 40px;">
+                <!-- Tabla de productos con No item, Ubicación, Descripción, X, Y, Z -->
+                <table class="table table-striped-columns" id="inventory_table_registry">
+                    <thead>
+                        <tr>
+                            <th scope="col">No item</th>
+                            <th scope="col">Ubicación</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Tamaño</th>
+                            <th scope="col">Fabricaci&oacute;n</th>
+                            <th scope="col">caducidad</th>
+                            <th scope="col mr-0">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory_table">
+                        <!-- inventory_table.js inserta: 
+                            <tr>
+                            <th scope="row">1</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>
+                                <button type="button" class="btn btn-primary">Editar</button>
+                                <button type="button" class="btn btn-danger">Eliminar</button>
+                                <button type="button" class="btn btn-danger">Ver en 3D</button>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         </div>
         <div class="modal-footer">
