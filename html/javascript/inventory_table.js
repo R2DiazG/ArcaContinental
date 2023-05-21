@@ -10,7 +10,7 @@
 /* ******************************************************************* */
 
 //Se crea una constante para la API REST
-const API_URL = 'http://localhost:3001/api/';
+const API_URL = 'http://localhost:8010/api/';
 
 // Funcion para obtener la informacion de la tabla de invetory_layout
 function getInventoryLayout(callback) {
@@ -113,7 +113,7 @@ function createInventoryTable(inventory_layout) {
         save_button.style.display = 'none';
         save_button.style.width = button_width;
         save_button.innerHTML = 'Guardar';
-        
+
         // Boton para cancelar la edicion del producto de la ubicacion
         var cancel_button = document.createElement('button');
         cancel_button.setAttribute('id', 'cancel_button_' + inventory_layout[i].ITEM_NO);

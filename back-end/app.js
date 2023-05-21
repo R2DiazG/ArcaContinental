@@ -23,6 +23,15 @@ app.use((req,res,next)=>{
 // Rutas
 require('./server/routes/usuarios')(app);
 require('./server/routes/visitantes')(app);
+//Configuramos la instancia app de express
+app.use(express.json());
+
+//Importamos el archivo router.js
+const router = require('./routes/router');
+
+//Implementamos el router en la aplicación
+app.use('/api', router);
+
 app.get('*', (req,res)=>{
     res.status(200).send({message:'Bienvenido a la API del inventario de ARCA–Continental'});
 });

@@ -275,11 +275,12 @@
         <!--Barra de busqueda-->
       </div>
       <!-- Botón de menú hamburguesa -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" id="burgerButton">
-        <span class="navbar-toggler-icon" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-          aria-controls="offcanvasScrolling"></span>
-      </button>
+      <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" id="burgerButton">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
       <!-- Links de navegación -->
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
@@ -296,7 +297,10 @@
     aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Informaci&oacute;n del paquete </h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <div data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
     </div>
     <div class="offcanvas-body" id="texto-offcanvas">
       <p>Intenta apuntar a un objeto en el mapa para ver sus datos aqu&iacute;.</p>
@@ -383,21 +387,21 @@
           <!--Incrustar aquí el contenido de inventory_table.html-->
           <div class="row">
             <div class="col" style="margin-bottom: 40px;">
-                <!-- Tabla de productos con No item, Ubicación, Descripción, X, Y, Z -->
-                <table class="table table-striped-columns" id="inventory_table_registry">
-                    <thead>
-                        <tr>
-                            <th scope="col">No item</th>
-                            <th scope="col">Ubicación</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Tamaño</th>
-                            <th scope="col">Fabricaci&oacute;n</th>
-                            <th scope="col">caducidad</th>
-                            <th scope="col mr-0">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventory_table">
-                        <!-- inventory_table.js inserta: 
+              <!-- Tabla de productos con No item, Ubicación, Descripción, X, Y, Z -->
+              <table class="table table-striped-columns" id="inventory_table_registry">
+                <thead>
+                  <tr>
+                    <th scope="col">No item</th>
+                    <th scope="col">Ubicación</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Tamaño</th>
+                    <th scope="col">Fabricaci&oacute;n</th>
+                    <th scope="col">caducidad</th>
+                    <th scope="col mr-0">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="inventory_table">
+                  <!-- inventory_table.js inserta: 
                             <tr>
                             <th scope="row">1</th>
                             <td>1</td>
@@ -411,10 +415,10 @@
                                 <button type="button" class="btn btn-danger">Ver en 3D</button>
                             </td>
                         </tr> -->
-                    </tbody>
-                </table>
+                </tbody>
+              </table>
             </div>
-        </div>
+          </div>
 
         </div>
         <div class="modal-footer">
