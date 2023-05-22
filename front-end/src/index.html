@@ -12,7 +12,7 @@
     // Revisar si existe el objeto identity_usr en el localStorage, si no existe, redirigir a login, si existe, redirigir a VISUALIZER_URL}
     const identity_usr = localStorage.getItem('identity_usr');
     if (!identity_usr) {
-      if (!window.location.href.includes('notoken')) window.location.href = '~wvt/ArcaContinental/front-end/login?notoken';
+      if (!window.location.href.includes('notoken')) window.location.href = '/front-end/login?notoken';
     } else {
       // SI la URL no contiene el parametro dashboard
       if (!window.location.href.includes('dashboard')) {
