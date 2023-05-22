@@ -1,5 +1,5 @@
 //Se crea una constante para la API REST
-const API_URL = 'http://localhost:3001/api/';
+const API_URL = 'http://localhost:8010/api/';
 
 // Los valores minimos se toman del localstorage
 var xMin = localStorage.getItem("pasillos");

@@ -4,7 +4,6 @@
     "password": "666",
     "database": "postgres",
     "host": "localhost",
-    "port" : "5007", 
     "dialect": "postgres"
   },
   "test": {
