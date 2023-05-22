@@ -1,9 +1,10 @@
 {
   "development": {
     "username": "postgres",
-    "password": "12172296",
-    "database": "visitasinventario",
-    "host": "127.0.0.1",
+    "password": "666",
+    "database": "postgres",
+    "host": "localhost",
+    "port" : "5007", 
     "dialect": "postgres"
   },
   "test": {

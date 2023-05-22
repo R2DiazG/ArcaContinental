@@ -18,16 +18,14 @@ export class LoginService {
     if (getToken) {
       usuario.token = getToken;
     }
-    /* console.log(usuario); */
     let headers: HttpHeaders = new HttpHeaders({
       "Content-Type": "application/json"
     });
+    
     let options = { headers: headers};
-    /* console.log(this.url + 'login', usuario, options); */
     return this._http.post(this.url + 'login', usuario, options).toPromise()
       .then(res => {
         if (res) {
-          /* console.log(res); */
           return JSON.parse(JSON.stringify(res));
         }
         return null;

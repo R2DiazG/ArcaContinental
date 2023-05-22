@@ -15,7 +15,7 @@ import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.121.1/exampl
 
 
 //Se crea una constante para la API REST
-const API_URL = 'http://localhost:3001/api/';
+const API_URL = 'http://localhost:8010/api/';
 
 // standard global variables
 var canvas, scene, camera, renderer, controls;
@@ -32,6 +32,15 @@ productionGroup.name = 'products';
 
 function main() {
 
+
+    function showtoast() {
+        // Se muestra el toast de simbología
+        const toastLiveExample = document.getElementById('liveToast')
+        const toast = new bootstrap.Toast(toastLiveExample)
+        toast.show()
+    }
+    showtoast();
+
     getWarehouseDimensions(setupCheck);
 
     function setupCheck(dimensiones) {
@@ -42,7 +51,6 @@ function main() {
             var pasillos = dimensiones.X_LENGHT;
             var largoEspacios = dimensiones.Y_LENGHT;
             var pisos = dimensiones.Z_LENGHT;
-            console.log("pasillos: " + pasillos + " largoEspacios: " + largoEspacios + " pisos: " + pisos);
             // Guardar en el local storage
             localStorage.setItem("pasillos", pasillos);
             localStorage.setItem("largoEspacios", largoEspacios);
@@ -52,16 +60,18 @@ function main() {
 
     //Se revisa si el local storage tiene la cantidad de pasillos
     if (localStorage.getItem("pasillos") == null) {
-        // Se hace la petición a la API REST para crear la tabla layout
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', API_URL + 'createtablelayout', true);
-        xhr.send();
-        // Se hace la petición a la API REST para crear la tabla production
-        xhr.open('GET', API_URL + 'createtableproduction', true);
-        xhr.send();
-        // Se hace la petición a la API REST para crear la tabla productionlayout
-        xhr.open('GET', API_URL + 'createtableproductionlayout', true);
-        xhr.send();
+        // confirmación para ("Se creará un almacen con " + pasillos + " pasillos, " + largoEspacios + " espacios por pasillo y " + pisos + " pisos por pasillo");
+        if (confirm("Se creará un almacen con 8 pasillos, 30 espacios por pasillo y 2 pisos por pasillo")) {// Se hace la petición a la API REST para crear la tabla layout
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', API_URL + 'createtablelayout', true);
+            xhr.send();
+            // Se hace la petición a la API REST para crear la tabla production
+            xhr.open('GET', API_URL + 'createtableproduction', true);
+            xhr.send();
+            // Se hace la petición a la API REST para crear la tabla productionlayout
+            xhr.open('GET', API_URL + 'createtableproductionlayout', true);
+            xhr.send();
+        }
 
         /*         //pedir al usuario que ingrese la cantidad de pasillos que desea
                 var pasillos = parseInt(prompt("Ingrese la cantidad de pasillos que desea", 5));
@@ -71,7 +81,6 @@ function main() {
         var pasillos = 8;
         var largoEspacios = 30;
         var pisos = 2;
-        alert("Se creará un almacen con " + pasillos + " pasillos, " + largoEspacios + " espacios por pasillo y " + pisos + " pisos por pasillo");
         //Se crea el layout
         createLayout(pasillos, largoEspacios, pisos, 0, 0, 0);
         //Se almacena la cantidad de pasillos, largoEspacios y pisos en el local storage
@@ -202,7 +211,7 @@ function main() {
     /* *************         CONFIGURACION DEL PISO       **************** */
     /* ******************************************************************* */
     //Añadimos el piso
-    const planeSize = 3050;
+    const planeSize = xBig + 100;
     // Se crea una textura para el piso
     const loader = new THREE.TextureLoader();
     //Se carga la textura desde la ruta especificada
@@ -295,38 +304,6 @@ function main() {
         return cube;
     }
 
-    //funcion para crear colores en hexadecimal en formato 0xrrggbb de acuerdo con la fecha de caducidad
-    // rojo = 0xff0000 para productos que estan por caducar (menos de 7 dias)
-    // amarillo = #e8f558 para productos que estan por caducar (menos de 30 dias)
-    // verde = #adff99 para productos que no estan por caducar (mas de 30 dias)
-    // DEPRECATED!
-    function getColorByExpiration(expiration) {
-        var color = '#';
-        var date = new Date();
-        var today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-        var todayDate = new Date(today);
-        var expirationDate = new Date(expiration);
-        var diff = expirationDate.getTime() - todayDate.getTime();
-        var days = Math.ceil(diff / (1000 * 3600 * 24));
-        if (days <= 0) {
-            // el color será  rojo si la fecha de caducidad es menor a la fecha actual
-            color = '#de0404';
-        } else if (days <= 7) {
-            color = '#fa6e02'; //naranja
-        } else if (days <= 30) {
-            color = '#666303'; //amarillo
-        } else {
-            color = '#53a842'; //verde
-        }
-        return color;
-    }
-
-    //funcion para crear colores en hexadecimal en formato 0xrrggbb de acuerdo con la frescura del producto
-    // la frescura son los días entre la fecha de fabricacion y la fecha actual
-    // verde = #adff99 para productos con frescura menor a 7 días.
-    // amarillo = #e8f558 para productos con frescura de entre 8 a 30 días.
-    // naranja = #fa6e02 para productos con frescura de entre 31 a 60 días.
-    // rojo = 0xff0000 para productos con frescura mayor a 60 días.
 
 
 
@@ -425,13 +402,13 @@ async function procesarDatosProductos(datos) {
     //convertimos los datos de la base de datos en un arreglo de arreglos
     datos.map(d => {
         //Se llama makeInstance para crear los cubos en un arreglo de acuerdo a las ubicaciones
-        const [x, y, z, boxWidth, boxHeight, boxDepth, location_no, item_no, description, manufacturingDate, expiration, category]
-            = [d.X, d.Y, d.Z, d.WIDTH, d.HEIGHT, d.DEPTH, d.LOCATION, d.ITEM_NO, d.ITEM_DESCRIPTION, d.MANUFACTURING_DATE, d.EXPIRATION, d.CATEGORY];
+        const [x, y, z, boxWidth, boxHeight, boxDepth, location_no, item_no, description, size, manufacturingDate, expiration, category]
+            = [d.X, d.Y, d.Z, d.WIDTH, d.HEIGHT, d.DEPTH, d.LOCATION, d.ITEM_NO, d.ITEM_DESCRIPTION, d.SIZE, d.MANUFACTURING_DATE, d.EXPIRATION, d.CATEGORY];
 
         //Si el valor en x es menor a 230 * pasillos, se crea el cubo
         const color = getColorByFreshnessDate(manufacturingDate);
         const cube = makeColorInstance(boxWidth, boxHeight, boxDepth, color,
-            x, z, y, location_no, item_no, description, manufacturingDate, expiration, category);
+            x, z, y, location_no, item_no, description, size, manufacturingDate, expiration, category);
         // Se agrega el cubo al grupo de cubos
         productionGroup.add(cube);
     });
@@ -441,7 +418,7 @@ async function procesarDatosProductos(datos) {
 }
 
 //funcion para crear Meshs con color
-function makeColorInstance(bW, bH, bD, color, x, y, z, location_no, item_no, description, manufacturingDate, expiration, category) {
+function makeColorInstance(bW, bH, bD, color, x, y, z, location_no, item_no, description, size, manufacturingDate, expiration, category) {
     //Se crea una BoxGeometry
     const boxWidth = bW;
     const boxHeight = bH;
@@ -449,7 +426,7 @@ function makeColorInstance(bW, bH, bD, color, x, y, z, location_no, item_no, des
     //Se crea una geometria con los valores de la base de datos
     const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
     //Se crea un material con el color hexadecimal
-    const material = new THREE.MeshPhongMaterial();
+    const material = new THREE.MeshBasicMaterial({ color: color });
     material.color.setHex(color);
     // Se crea un cubo con la geometria y el material
     const cube = new THREE.Mesh(geometry, material);
@@ -465,16 +442,17 @@ function makeColorInstance(bW, bH, bD, color, x, y, z, location_no, item_no, des
     var freshness = Math.ceil(diff / (1000 * 3600 * 24));
 
     // Se agrega el nombre del producto al cubo con la informacion de la base de datos
-    cube.name = "No. Item: " + item_no 
-    + "\nDescripción: " + description 
-    + "\nCategoria: " + category 
-    + "\nFrescura: " + freshness 
-    + " días \nFabricación: " + manufacturingDate 
-    + "\nCaducidad: " + expiration 
-    + "\nCódigo de la ubicación: " + location_no 
-    + "\n Pasillo: " + parseInt(x/138+1)
-    + "\n Anaquel: " + parseInt(z/58+1)
-    + "\n Piso: " + parseInt(y/60+1) + "\n";
+    cube.name = "No. Item: " + item_no
+        + "\nDescripción: " + description
+        + "\nCategoria: " + category
+        + "\nTamaño: " + size
+        + "\nFrescura: " + freshness
+        + " días \nFabricación: " + manufacturingDate
+        + "\nCaducidad: " + expiration
+        + "\nCódigo de la ubicación: " + location_no
+        + "\n Pasillo: " + parseInt(x / 138 + 1)
+        + "\n Anaquel: " + parseInt(z / 58 + 1)
+        + "\n Piso: " + parseInt(y / 60 + 1) + "\n";
     //se posiciona el cubo en los valores de x, y, z
     cube.position.set(x, y, z);
     return cube;
@@ -492,9 +470,9 @@ function getColorByFreshnessDate(manufacturingDate) {
     var days = Math.ceil(diff / (1000 * 3600 * 24));
 
     if (days <= 7) {
-        color = '0xadff99'; //verde
+        color = '0x0e8c03'; //verde
     } else if (days > 7 && days <= 30) {
-        color = '0xe8f558'; //amarillo
+        color = '0x8c7d03'; //amarillo
     } else if (days > 30 && days <= 60) {
         color = '0xfa6e02'; //naranja
     } else if (days > 60) {
@@ -563,7 +541,6 @@ async function getWarehouseDimensions(callback) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             // Se obtiene la respuesta del servidor
-            console.log("...Se obtienen las dimensiones del almacen");
             var response = xhr.responseText;
             // Se parsea la respuesta a un objeto JSON
             var warehouseDimensions = JSON.parse(response);
@@ -642,7 +619,7 @@ function update() {
                     // dentro de otro, para que se vean separados
                     if (i == 0) {
                         messageFormatted += "<div class='card'><ul class='list-group list-group-flush'> <li class='list-group-item'>";
-                    } else if (i == 6) {
+                    } else if (i == 7) {
                         messageFormatted += "</li> <li class='list-group-item'>";
                     }
 
@@ -692,6 +669,7 @@ document.getElementById("categoria-tab").addEventListener("click", function () {
 function changeActiveTab(id) {
     var frescuraTab = document.getElementById("frescura-tab");
     var categoriaTab = document.getElementById("categoria-tab");
+    resetDefaultSubcategoriaSelector();
     if (id == "frescura-tab") {
         frescuraTab.classList.add("active");
         frescuraTab.classList.add("disabled");
@@ -740,7 +718,7 @@ function changeSimbologyToast(text) {
 // Funcion para extraer el tipo de producto
 // Recibe un cubo como paramtero
 // Retorna un String con el tipo de producto
-function getTypeOf(cube) {
+function getCategoryOf(cube) {
     // Obtener el nombre del objeto
     var name = cube.name;
     // Obtener el tipo de producto
@@ -819,17 +797,17 @@ function changeAllColorsByType() {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
         //  obtener el tipo de producto despues del primer espacio
-        var type = getTypeOf(child);
+        var type = getCategoryOf(child);
         // Cambiar el color del material del objeto hijo
         var color = getHexColorByType(type);
         child.material.color.setHex(color);
     }
 
 
-            // Hacemos un String con la nueva simbología basada el tipo de producto
+    // Hacemos un String con la nueva simbología basada el tipo de producto
 
-            /*
-                const colorRefresco = "0x644685";
+    /*
+        const colorRefresco = "0x644685";
 const colorAgua = "0x3498db";
 const colorAguaPurificada = "0x2ecc71";
 const colorBebidaFruta = "0xf1c40f";
@@ -846,89 +824,89 @@ const colorCacahuates = "0xbdc3c7";
 const colorChicharrones = "0x7f8c8d";
 const colorSalsas = "0x8e44ad";
 const colorDulces = "0x2c3e50";
-            */
+    */
 
-            let newLegend = '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #644685;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Refresco/Gaseosa</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #3498db;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Aguas Purificadas/Sabores</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #2ecc71;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Bebidas fruta/soya/soja</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #f1c40f;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Energéticas/Deportivas</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #9b59b6;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Tés</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #1abc9c;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Vitaminadas</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #95a5a6;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Café</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color: #34495e;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Leche</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology" style="background-color:#27ae60;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Yogurt</p>'
-            + '</div>'
-            + '</div>'
-            + '<div class="row">'
-            + '<div class="col-2">'
-            + '<div class="color-symbology"  style="background-color: #f39c12;"></div>'
-            + '</div>'
-            + '<div class="col-10">'
-            + '<p class="hidden">Papas fritas</p>'
-            + '</div>'
-            + '</div>'
-            + '</div>'
+    let newLegend = '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #644685;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Refresco/Gaseosa</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #3498db;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Aguas Purificadas/Sabores</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #2ecc71;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Bebidas fruta/soya/soja</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #f1c40f;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Energéticas/Deportivas</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #9b59b6;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Tés</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #1abc9c;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Vitaminadas</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #95a5a6;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Café</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color: #34495e;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Leche</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology" style="background-color:#27ae60;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Yogurt</p>'
+        + '</div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-2">'
+        + '<div class="color-symbology"  style="background-color: #f39c12;"></div>'
+        + '</div>'
+        + '<div class="col-10">'
+        + '<p class="hidden">Papas fritas</p>'
+        + '</div>'
+        + '</div>'
+        + '</div>'
 
     // Reemplazamos la simbología anterior por la nueva
     changeSimbologyToast(newLegend);
@@ -951,7 +929,7 @@ function highlightColorByType(elemento) {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
         // Obtener el tipo de producto despues del primer espacio
-        var productType = getTypeOf(child);
+        var productType = getCategoryOf(child);
         // Si el tipo del producto es igual al tipo que se está buscando
         if (productType == type) {
             // Cambiar el color del material del objeto hijo
@@ -976,7 +954,7 @@ function changeAllColorsByFreshness() {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
         // Obtener la frescura del producto
-        let days = getFreshnessDays(child);
+        let days = getFreshnessDaysOf(child);
         let color = getColorByFreshnesDays(days);
         child.material.color.setHex(color);
     }
@@ -987,7 +965,7 @@ function changeAllColorsByFreshness() {
         + '<div class="color-symbology" style="background-color: #adff99;"></div>'
         + '</div>'
         + '<div class="col-10">'
-        + '<p>Frescura menor a 7 d&iacute;as.</p>'
+        + '<p class="hidden">Frescura menor a 7 d&iacute;as.</p>'
         + '</div>'
         + '</div>'
         + '<div class="row">'
@@ -995,7 +973,7 @@ function changeAllColorsByFreshness() {
         + '<div class="color-symbology" style="background-color: #e8f558;"></div>'
         + '</div>'
         + '<div class="col-10">'
-        + '<p>Frescura entre 8 a 30 d&iacute;as.</p>'
+        + '<p class="hidden">Frescura entre 8 a 30 d&iacute;as.</p>'
         + '</div>'
         + '</div>'
         + '<div class="row">'
@@ -1003,7 +981,7 @@ function changeAllColorsByFreshness() {
         + '<div class="color-symbology" style="background-color: #fa6e02;"></div>'
         + '</div>'
         + '<div class="col-10">'
-        + '<p>Frescura entre 31 a 60 d&iacute;as.</p>'
+        + '<p class="hidden">Frescura entre 31 a 60 d&iacute;as.</p>'
         + '</div>'
         + '</div>'
         + '<div class="row">'
@@ -1011,7 +989,7 @@ function changeAllColorsByFreshness() {
         + '<div class="color-symbology" style="background-color: #de0404;"></div>'
         + '</div>'
         + '<div class="col-10">'
-        + '<p>Frescura mayor a 61 d&iacute;as.</p>'
+        + '<p class="hidden">Frescura mayor a 61 d&iacute;as.</p>'
         + '</div>'
         + '</div>';
 
@@ -1062,8 +1040,8 @@ function highlightByExpiration(selectedValue) {
 
 // Colores de los cubos de acuerdo al filtro de frescura
 const colorsByFreshness = {
-    1: '0xadff99', //verde
-    2: '0xe8f558', //amarillo
+    1: '0x0e8c03', //verde
+    2: '0x8c7d03', //amarillo
     3: '0xfa6e02', //naranja
     4: '0xde0404', //rojo
 }
@@ -1090,7 +1068,7 @@ function highlightByFreshness(selectedValue) {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
         // Obtener la frescura del producto
-        var freshness = getFreshnessDays(child);
+        var freshness = getFreshnessDaysOf(child);
         // Cambiar el color del material del objeto hijo
         var color = getColorByFreshnesDays(freshness);
         if (selectedValue == 1 && freshness <= 7) {
@@ -1147,58 +1125,38 @@ function getExpirationLimits(selectedValue) {
 }
 
 // Función para cambiar el color de los cubos del productionGroup de acuerdo al filtro de categoría
-function highlightByCategory(categoryValue) {
-    categoryValue = getCategoryById(categoryValue);
+function highlightByCategory(categoryName) {
+    categoryName = getCategoryById(categoryName);
     // Recorrer los hijos del productionGroup
     for (var i = 0; i < productionGroup.children.length; i++) {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
         // Obtener la categoría del producto
-        var category = getTypeOf(child);
+        var category = getCategoryOf(child);
         // Cambiar el color del material del objeto hijo
         var color = colorHighlight; //verde
-        if (categoryValue == category) {
+        if (categoryName == category) {
             child.material.color.setHex(color);
         }
     }
 }
 
-function highlightByExpirationAndCategory(expirationValue, categoryValue) {
-    // determinar los días de caducidad mínimos y máximos
-    let [minExpDays, maxExpDays] = getExpirationLimits(expirationValue);
+// Función para resaltar los cubos de cierta categoría y subcategoría
+function highlightByCategoryAndSubcategory(subcategoryValue, categorySelectedValue) {
+    var categoryName = getCategoryById(categorySelectedValue); //obtener el nombre de la categoría
     // Recorrer los hijos del productionGroup
     for (var i = 0; i < productionGroup.children.length; i++) {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
-        // Obtener los días falta para que el producto caduque
-        var days = getExpirationDays(child);
         // Obtener la categoría del producto
-        var category = getTypeOf(child);
+        var category = getCategoryOf(child);
+        // Obtener la subcategoría del producto (Size)
+        var line = child.name.split("\n")[3];
+        var subcategory = line.substring(line.indexOf(" ") + 1);
+        subcategory.trim();
         // Cambiar el color del material del objeto hijo
-        var color = colorHighlight; //verde
-        if (days > minExpDays && days <= maxExpDays && category == categoryValue) {
-            child.material.color.setHex(color);
-        }
-    }
-}
-function highlightByExpirationAndFreshness(exirationValue, freshnessValue) {
-    // determinar los días de caducidad
-    let [minExpDays, maxExpDays] = getExpirationLimits(exirationValue);
-
-    // determinar los días de frescura
-    let [minFreshDays, maxFreshDays] = getFreshnessLimits(freshnessValue);
-
-    // Recorrer los hijos del productionGroup
-    for (var i = 0; i < productionGroup.children.length; i++) {
-        // Obtener el objeto hijo
-        var child = productionGroup.children[i];
-        // Obtener los días falta para que el producto caduque
-        var days = getExpirationDays(child);
-        // Obtener la frescura del producto
-        var freshness = getFreshnessDays(child);
-        // Cambiar el color del material del objeto hijo
-        var color = colorHighlight; //verde
-        if (days > minExpDays && days <= maxExpDays && freshness > minFreshDays && freshness <= maxFreshDays) {
+        var color = colorHighlight;
+        if (category == categoryName && subcategory === subcategoryValue) {
             child.material.color.setHex(color);
         }
     }
@@ -1207,14 +1165,16 @@ function highlightByExpirationAndFreshness(exirationValue, freshnessValue) {
 function highlightByFreshnessAndCategory(freshnessValue, categoryValue) {
     // determinar los días de frescura
     let [minFreshDays, maxFreshDays] = getFreshnessLimits(freshnessValue);
+    // obtener la categoría por su id
+    var categoryValue = getCategoryById(categoryValue);
     // Recorrer los hijos del productionGroup
     for (var i = 0; i < productionGroup.children.length; i++) {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
         // Obtener la frescura del producto
-        var freshness = getFreshnessDays(child);
+        var freshness = getFreshnessDaysOf(child);
         // Obtener la categoría del producto
-        var category = getTypeOf(child);
+        var category = getCategoryOf(child);
         // Cambiar el color del material del objeto hijo
         var color = colorHighlight; //verde
         if (freshness > minFreshDays && freshness <= maxFreshDays && category == categoryValue) {
@@ -1223,24 +1183,26 @@ function highlightByFreshnessAndCategory(freshnessValue, categoryValue) {
     }
 }
 
-function highlightByExpirationAndFreshnessAndCategory(expirationValue, freshnessValue, categoryValue) {
+function highlightByFreshnessAndCategoryAndSubcategory(subcategoryValue, freshnessValue, categoryValue) {
     // determinar los días de frescura
     let [minFreshDays, maxFreshDays] = getFreshnessLimits(freshnessValue);
-    // determinar los días de caducidad
-    let [minExpDays, maxExpDays] = getExpirationLimits(expirationValue);
+    // obtener la categoría por su id
+    var categoryName = getCategoryById(categoryValue);
     // Recorrer los hijos del productionGroup
     for (var i = 0; i < productionGroup.children.length; i++) {
         // Obtener el objeto hijo
         var child = productionGroup.children[i];
-        // Obtener los días falta para que el producto caduque
-        var days = getExpirationDays(child);
         // Obtener la frescura del producto
-        var freshness = getFreshnessDays(child);
+        var freshness = getFreshnessDaysOf(child);
         // Obtener la categoría del producto
-        var category = getTypeOf(child);
+        var category = getCategoryOf(child);
+        // Obtener la subcategoría del producto (Size)
+        var line = child.name.split("\n")[3];
+        var subcategory = line.substring(line.indexOf(" ") + 1);
+        subcategory.trim();
         // Cambiar el color del material del objeto hijo
         var color = '0x53a842'; //verde
-        if (days > minExpDays && days <= maxExpDays && freshness > minFreshDays && freshness <= maxFreshDays && category == categoryValue) {
+        if (category == categoryName && freshness > minFreshDays && freshness <= maxFreshDays && subcategory === subcategoryValue) {
             child.material.color.setHex(color);
         }
     }
@@ -1256,27 +1218,16 @@ document.getElementById("subcategoriaSelector").addEventListener("change", funct
     var freshnessSelectorVal = document.getElementById("frescuraSelector").value;
     // Obtener el valor del select categoriaSelector
     var freshnessRange = getFreshnessLimits(freshnessSelectorVal);
-    console.log("freshnessRange");
-    console.log(freshnessRange);
     var categorySelectorVal = document.getElementById("categoriaSelector").value;
     var categoryName = getCategoryById(categorySelectorVal);
-    console.log("categoryName");
-    console.log(categoryName);
     // Obtener el toast de simbología
     const toastLiveExample = document.getElementById('liveToast')
     const toast = new bootstrap.Toast(toastLiveExample)
 
-    // Si la opción seleccionada es por caducidad la opcion debe ser mayor a 0
     if (subcategoriaSelectedValue == 0) {
-        if (freshnessSelectorVal == 0 && categorySelectorVal == 0) {
-            changeAllColorsByFreshness();
-            toast.show();
-        } else if (freshnessSelectorVal == 0 && categorySelectorVal != 0) {
+        if (freshnessSelectorVal == 0 && categorySelectorVal != 0) {
             changeAllColorsToWhite();
             highlightByCategory(categorySelectorVal);
-        } else if (freshnessSelectorVal != 0 && categorySelectorVal == 0) {
-            changeAllColorsToWhite();
-            highlightByFreshness(freshnessSelectorVal);
         }
         else if (freshnessSelectorVal != 0 && categorySelectorVal != 0) {
             changeAllColorsToWhite();
@@ -1285,22 +1236,17 @@ document.getElementById("subcategoriaSelector").addEventListener("change", funct
     } else {
         // Se oculta el toast de simbología
         toast.hide();
-        if (freshnessSelectorVal == 0 && categorySelectorVal == 0) {
+        if (freshnessSelectorVal == 0 && categorySelectorVal != 0) {
             changeAllColorsToWhite();
-            // Quitar el productionGroup del escenario
-            scene.remove(productionGroup);
-            // Crear un filteredProductionGroup
-
-            filteredProductionGroup = getCubesByCategory(category, size, freshnessRange);
-        } else if (freshnessSelectorVal == 0 && categorySelectorVal != 0) {
-            changeAllColorsToWhite();
-            highlightByExpirationAndCategory(subcategoriaSelectedValue, categorySelectorVal);
+            highlightByCategoryAndSubcategory(subcategoriaSelectedValue, categorySelectorVal);
         } else if (freshnessSelectorVal != 0 && categorySelectorVal == 0) {
             changeAllColorsToWhite();
-            highlightByExpirationAndFreshness(subcategoriaSelectedValue, freshnessSelectorVal);
+            //Cambiar el subcategoriaSelector a la opcion 0
+            document.getElementById("subcategoriaSelector").value = 0;
+            highlightByFreshness(freshnessSelectorVal);
         } else if (freshnessSelectorVal != 0 && categorySelectorVal != 0) {
             changeAllColorsToWhite();
-            highlightByExpirationAndFreshnessAndCategory(subcategoriaSelectedValue, freshnessSelectorVal, categorySelectorVal);
+            highlightByFreshnessAndCategoryAndSubcategory(subcategoriaSelectedValue, freshnessSelectorVal, categorySelectorVal);
         }
 
     }
@@ -1311,7 +1257,7 @@ document.getElementById("frescuraSelector").addEventListener("change", function 
     // Obtener el valor seleccionado
     var freshnesSelectedValue = this.value;
     // Obtener el valor del select subcategoriaSelector
-    var expirationSelectorVal = document.getElementById("subcategoriaSelector").value;
+    var subcategoriaSelectorVal = document.getElementById("subcategoriaSelector").value;
     // Obtener el valor del select categoriaSelector
     var categorySelectorVal = document.getElementById("categoriaSelector").value;
     // Obtener el toast de simbología
@@ -1320,33 +1266,32 @@ document.getElementById("frescuraSelector").addEventListener("change", function 
 
     // Si la opción seleccionada es por frescura la opcion debe ser mayor a 0
     if (freshnesSelectedValue == 0) {
-        if (expirationSelectorVal == 0 && categorySelectorVal == 0) {
+        if (subcategoriaSelectorVal == 0 && categorySelectorVal == 0) {
             changeAllColorsByFreshness();
             toast.show();
-        } else if (expirationSelectorVal == 0 && categorySelectorVal != 0) {
+        } else if (subcategoriaSelectorVal == 0 && categorySelectorVal != 0) {
             changeAllColorsToWhite();
             highlightByCategory(categorySelectorVal);
-        } else if (expirationSelectorVal != 0 && categorySelectorVal == 0) {
+        } else if (subcategoriaSelectorVal != 0 && categorySelectorVal != 0) {
             changeAllColorsToWhite();
-            highlightByExpiration(expirationSelectorVal);
-        } else if (expirationSelectorVal != 0 && categorySelectorVal != 0) {
-            changeAllColorsToWhite();
-            highlightByExpirationAndCategory(expirationSelectorVal, categorySelectorVal);
+            highlightByCategoryAndSubcategory(subcategoriaSelectorVal, categorySelectorVal);
         }
     } else {
-        if (expirationSelectorVal == 0 && categorySelectorVal == 0) {
+        if (subcategoriaSelectorVal == 0 && categorySelectorVal == 0) {
             changeAllColorsToWhite();
             highlightByFreshness(freshnesSelectedValue);
-        } else if (expirationSelectorVal == 0 && categorySelectorVal != 0) {
+        } else if (subcategoriaSelectorVal == 0 && categorySelectorVal != 0) {
             changeAllColorsToWhite();
             highlightByFreshnessAndCategory(freshnesSelectedValue, categorySelectorVal);
-        } else if (expirationSelectorVal != 0 && categorySelectorVal == 0) {
+        } else if (subcategoriaSelectorVal != 0 && categorySelectorVal == 0) {
             changeAllColorsToWhite();
-            highlightByExpirationAndFreshness(expirationSelectorVal, freshnesSelectedValue);
+            // Subcategoría selector a la opcion 0
+            document.getElementById("subcategoriaSelector").value = 0;
+            highlightByFreshness(freshnesSelectedValue);
         } else {
-            if (expirationSelectorVal != 0 && categorySelectorVal != 0) {
+            if (subcategoriaSelectorVal != 0 && categorySelectorVal != 0) {
                 changeAllColorsToWhite();
-                highlightByExpirationAndFreshnessAndCategory(expirationSelectorVal, freshnesSelectedValue, categorySelectorVal);
+                highlightByFreshnessAndCategoryAndSubcategory(subcategoriaSelectorVal, freshnesSelectedValue, categorySelectorVal);
             }
         }
         // Se oculta el toast de simbología
@@ -1361,55 +1306,64 @@ document.getElementById("categoriaSelector").addEventListener("change", function
     // Obtener el valor seleccionado
     var catSelectedValue = this.value;
     // Obtener el valor del select subcategoriaSelector
-    var expirationSelectVal = document.getElementById("subcategoriaSelector").value;
+    var subcategorySelectVal = document.getElementById("subcategoriaSelector").value;
     // Obtener el valor del select frescuraSelector
     var freshnessSelectorVal = document.getElementById("frescuraSelector").value;
     // Obtener el toast de simbología
     const toastLiveExample = document.getElementById('liveToast')
     const toast = new bootstrap.Toast(toastLiveExample)
+
+    // Remover todas las opciones del select de subcategoriaSelector
+    resetDefaultSubcategoriaSelector();
+
     // La opción seleccionada debe ser mayor a 0
     if (catSelectedValue == 0) {
-        if (freshnessSelectorVal == 0 && expirationSelectVal == 0) {
+
+        if (freshnessSelectorVal == 0 && subcategorySelectVal == 0) {
             changeAllColorsByFreshness();
             toast.show();
-        } else if (freshnessSelectorVal == 0 && expirationSelectVal != 0) {
-            changeAllColorsToWhite();
-            highlightByExpiration(expirationSelectVal);
-        } else if (freshnessSelectorVal != 0 && expirationSelectVal == 0) {
+        } else if (freshnessSelectorVal == 0 && subcategorySelectVal != 0) {
+            changeAllColorsByFreshness();
+        } else if (freshnessSelectorVal != 0 && subcategorySelectVal == 0) {
             changeAllColorsToWhite();
             highlightByFreshness(freshnessSelectorVal);
-        } else if (freshnessSelectorVal != 0 && expirationSelectVal != 0) {
+        } else if (freshnessSelectorVal != 0 && subcategorySelectVal != 0) {
             changeAllColorsToWhite();
-            highlightByExpirationAndFreshness(expirationSelectVal, freshnessSelectorVal);
+            highlightByFreshness(freshnessSelectorVal);
         }
 
     } else {
         // Se oculta el toast de simbología
         toast.hide();
-        if (freshnessSelectorVal == 0 && expirationSelectVal == 0) {
+        if (freshnessSelectorVal == 0 && subcategorySelectVal == 0) {
             updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
-        } else if (freshnessSelectorVal == 0 && expirationSelectVal != 0) {
+        } else if (freshnessSelectorVal == 0 && subcategorySelectVal != 0) {
+            resetDefaultSubcategoriaSelector();
+            updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
             changeAllColorsToWhite();
-            highlightByExpirationAndCategory(expirationSelectVal, catSelectedValue);
-        } else if (freshnessSelectorVal != 0 && expirationSelectVal == 0) {
+            highlightByCategory(catSelectedValue);
+        } else if (freshnessSelectorVal != 0 && subcategorySelectVal == 0) {
+            updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
             changeAllColorsToWhite();
             highlightByFreshnessAndCategory(freshnessSelectorVal, catSelectedValue);
-        } else if (freshnessSelectorVal != 0 && expirationSelectVal != 0) {
+        } else if (freshnessSelectorVal != 0 && subcategorySelectVal != 0) {
+            resetDefaultSubcategoriaSelector();
+            updateSubcategoriaSelector(appendSubcategoryOptions, catSelectedValue);
             changeAllColorsToWhite();
-            highlightByExpirationAndFreshnessAndCategory(expirationSelectVal, freshnessSelectorVal, catSelectedValue);
+            highlightByFreshnessAndCategory(freshnessSelectorVal, catSelectedValue);
         }
     }
 });
 
 function updateSubcategoriaSelector(callback, catSelectedValue) {
     // Se consultan los SIZE de los productos de la categoria seleccionada
-    let nameCategory = getCategoryById(catSelectedValue);
+    var categoryName = getCategoryById(catSelectedValue);
     // Se obtienen los SIZE de la categoria en la base de datos con xmlhttprequest
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", API_URL + "/getsize", true);
     xmlhttp.setRequestHeader("Content-Type", "application/json");
     xmlhttp.send(JSON.stringify({
-        CATEGORY: nameCategory
+        CATEGORY: categoryName
     }));
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -1421,6 +1375,14 @@ function updateSubcategoriaSelector(callback, catSelectedValue) {
     changeAllColorsToWhite();
     highlightByCategory(catSelectedValue);
 }
+
+// Función para eliminar los elementos de un select subcategoriaSelector y agregar la opción "Seleccionar"
+function resetDefaultSubcategoriaSelector() {
+    // Remover todas las opciones del select de subcategoriaSelector
+    document.getElementById("subcategoriaSelector").value = 0;
+    document.getElementById("subcategoriaSelector").options.length = 1;
+}
+
 
 // Funcion para recuperar los SIZE de los productos de una categoria
 // Recibe un numero la categoria
@@ -1481,12 +1443,8 @@ function getCategoryById(category) {
 
 }
 function appendSubcategoryOptions(sizes) {
-    // Eliminar todas las opciones del select de subcategoriaSelector excepto la primera
     var select = document.getElementById("subcategoriaSelector");
-    var length = select.options.length;
-    for (i = length - 1; i > 0; i--) {
-        select.options[i] = null;
-    }
+
     // Regresar el select a su valor por defecto
     select.value = 0;
 
@@ -1516,11 +1474,11 @@ function resetSelectors() {
 // Funcion para extraer la frescura de un producto
 // Recibe un cubo como paramtero
 // Retorna un int con la frescura del producto
-function getFreshnessDays(cubo) {
+function getFreshnessDaysOf(cubo) {
     // Obtener el nombre del objeto
     var name = cubo.name;
-    // Obtener la fecha de caducidad
-    var line = name.split("\n")[4];
+    // Obtener la fecha de fabricación
+    var line = name.split("\n")[5];
     var manufacturingDate = line.split(" ")[1].trim();
     // Calcular la frescura del producto
     var date = new Date();
@@ -1547,7 +1505,6 @@ function getExpirationDays(cubo) {
     // Calcular los días faltantes para la caducidad del producto
     var date = new Date();
     var today = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-    console.log("today: " + today);
     var todayDate = new Date(today);
     let fixDate = expirationDate.split('/');
     var expirationFixedDate = fixDate[2] + '/' + fixDate[1] + '/' + fixDate[0];
@@ -1556,42 +1513,3 @@ function getExpirationDays(cubo) {
     var days = Math.ceil(diff / (1000 * 3600 * 24));
     return days;
 }
-
-// Funcion para extraer los cubos de una categoria, tomando en cuenta los selectores de la barra de navegación
-// Recibe un String con el nombre de la categoria, un String con el SIZE y dos Strings para el rango de frescura.
-// Retorna un arreglo con los cubos de la categoria
-function getCubesByCategory(category, size, freshnessRange) {
-    // Vaciar el arreglo de cubos filteredGroup
-    filteredGroup.remove(...filteredGroup.children);
-    // Obtener los cubos de la categoria
-    var cubes = new THREE.Group();
-    var cubos = productionGroup.children;
-    for (var i = 0; i < cubos.length; i++) {
-        var cubo = cubos[i];
-        var name = cubo.name;
-        // Obtener la categoria del cubo
-        var line = name.split("\n")[0];
-        var categoryCube = line.split(" ")[1].trim();
-        // Obtener el SIZE del cubo
-        line = name.split("\n")[1];
-        var sizeCube = line.split(" ")[1].trim();
-        // Obtener la frescura del cubo
-        var freshnessCube = getFreshnessDays(cubo);
-        // Obtener los días faltantes para la caducidad del cubo
-        if (categoryCube == category) {
-            // Verificar que el cubo pertenezca al SIZE
-            if (sizeCube == size) {
-                // Verificar que el cubo pertenezca al rango de frescura
-                if (freshnessCube >= freshnessRange[0] && freshnessCube <= freshnessRange[1]) {
-                    // Verificar que el cubo pertenezca al rango de caducidad
-                    filteredGroup.add(cubo);
-                }
-            }
-        }
-    }
-    return cubes;
-}
-
-
-
-

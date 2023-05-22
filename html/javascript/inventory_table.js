@@ -10,7 +10,7 @@
 /* ******************************************************************* */
 
 //Se crea una constante para la API REST
-const API_URL = 'http://localhost:3001/api/';
+const API_URL = 'http://localhost:8010/api/';
 
 // Funcion para obtener la informacion de la tabla de invetory_layout
 function getInventoryLayout(callback) {
@@ -50,7 +50,6 @@ function createInventoryTable(inventory_layout) {
         });
     });
     for (var i = 0; i < inventory_layout.length; i++) {
-    //for (var i = 0; i < 100; i++) {
         var tr = document.createElement('tr');
         tr.setAttribute('id', 'tr_' + inventory_layout[i].ITEM_NO);
         var td1 = document.createElement('td');
@@ -64,34 +63,45 @@ function createInventoryTable(inventory_layout) {
         td3.innerHTML = inventory_layout[i].ITEM_DESCRIPTION;
         var td4 = document.createElement('td');
         td4.setAttribute('id', 'td4_' + inventory_layout[i].ITEM_NO);
-        td4.innerHTML = inventory_layout[i].X;
+        td4.innerHTML = inventory_layout[i].SIZE;
         var td5 = document.createElement('td');
         td5.setAttribute('id', 'td5_' + inventory_layout[i].ITEM_NO);
-        td5.innerHTML = inventory_layout[i].Y;
+        td5.innerHTML = inventory_layout[i].MANUFACTURING_DATE;
         var td6 = document.createElement('td');
         td6.setAttribute('id', 'td6_' + inventory_layout[i].ITEM_NO);
-        td6.innerHTML = inventory_layout[i].Z;
+        td6.innerHTML = inventory_layout[i].EXPIRATION;
         var td7 = document.createElement('td');
         td7.setAttribute('id', 'td7_' + inventory_layout[i].ITEM_NO);
-        // Botones para editar y eliminar el producto de la ubicacion
+
+        // Botones para editar y eliminar el producto de la ubicacion tienen el mismo width
+        const button_width = '80px';
+
         // Boton para editar
         var edit_button = document.createElement('button');
         edit_button.setAttribute('id', 'edit_button_' + inventory_layout[i].ITEM_NO);
         edit_button.setAttribute('class', 'btn btn-primary m-1');
         edit_button.setAttribute('onclick', 'editProductLocation(' + inventory_layout[i].ITEM_NO + ')');
+        // Se fija el width de los botones en 100px
+        edit_button.style.width = button_width;
         edit_button.innerHTML = 'Editar';
+
         // Boton para eliminar
         var delete_button = document.createElement('button');
         delete_button.setAttribute('id', 'delete_button_' + inventory_layout[i].ITEM_NO);
-        delete_button.setAttribute('class', 'btn btn-danger');
+        delete_button.setAttribute('class', 'btn btn-danger m-1');
         delete_button.setAttribute('onclick', 'deleteProductLocation(' + inventory_layout[i].ITEM_NO + ')');
+        // Se fija el width de los botones en 100px
+        delete_button.style.width = button_width;
         delete_button.innerHTML = 'Eliminar';
+
         //<button type="button" class="btn btn-danger">Ver en 3D</button>
         // Boton para ver en la vista 3D
         var view3d_button = document.createElement('button');
         view3d_button.setAttribute('id', 'view3d_button_' + inventory_layout[i].ITEM_NO);
         view3d_button.setAttribute('class', 'btn btn-success m-1');
         view3d_button.setAttribute('onclick', 'view3dProductLocation(' + inventory_layout[i].ITEM_NO + ')');
+        // Se fija el width de los botones en 100px
+        view3d_button.style.width = button_width;
         view3d_button.innerHTML = 'Ver';
 
         // Boton para guardar la edicion del producto de la ubicacion
@@ -101,13 +111,16 @@ function createInventoryTable(inventory_layout) {
         save_button.setAttribute('class', 'btn btn-primary m-1');
         save_button.setAttribute('onclick', 'saveProductLocation(' + inventory_layout[i].ITEM_NO + ')');
         save_button.style.display = 'none';
+        save_button.style.width = button_width;
         save_button.innerHTML = 'Guardar';
+
         // Boton para cancelar la edicion del producto de la ubicacion
         var cancel_button = document.createElement('button');
         cancel_button.setAttribute('id', 'cancel_button_' + inventory_layout[i].ITEM_NO);
-        cancel_button.setAttribute('class', 'btn btn-outline-danger');
+        cancel_button.setAttribute('class', 'btn btn-outline-danger m-1');
         cancel_button.setAttribute('onclick', 'cancelEditProductLocation(' + inventory_layout[i].ITEM_NO + ')');
         cancel_button.style.display = 'none';
+        cancel_button.style.width = button_width;
         cancel_button.innerHTML = 'Cancelar';
 
 
@@ -126,7 +139,7 @@ function createInventoryTable(inventory_layout) {
         tr.appendChild(td6);
         tr.appendChild(td7);;
         table.appendChild(tr);
-    }  
+    }
 }
 getInventoryLayout(createInventoryTable);
 
