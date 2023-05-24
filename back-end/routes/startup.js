@@ -189,7 +189,19 @@ router.get('/getdimension', (req, res) => {
         if (err) {
             console.log(err);
         } else {
+            // Comprobar que el resultados no está vacío, de ser asi enviar datos por default
+            if (result.rows.length == 0) {
+                db.query('INSERT INTO public."Dimension"("X_LENGHT", "Y_LENGHT", "Z_LENGHT", "ID") VALUES (8, 30, 3, 1)', (err, result) => {   
+                    if (err) {
+                        console.log(err);
+                    } else {
+
+                    }
+                });
+                res.send({"X_LENGHT": 8, "Y_LENGHT": 30, "Z_LENGHT": 3});
+            } else {
             res.send(result.rows[0]);
+            }
         }   
     });
 });

@@ -7,7 +7,7 @@ const db = new Pool({
     user: 'wvt',
     host: 'localhost',
     port: 5007,
-    database: 'wvt_db',
+    database: 'wvt',
     password: '666wvt'
 });
 
