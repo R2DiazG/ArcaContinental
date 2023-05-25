@@ -5,7 +5,7 @@ const { Pool } = require('pg');
 
 const db = new Pool({
     user: 'wvt',
-    host: 'localhost',
+    host: '148.238.2.83',
     port: 5007,
     database: 'wvt_db',
     password: '666wvt'

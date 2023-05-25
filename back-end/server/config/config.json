@@ -3,7 +3,7 @@
     "username": "wvt", 
     "password": "666wvt",
     "database": "wvt_db",
-    "host": "localhost",
+    "host": "148.238.2.83",
     "dialect": "postgres"
   },
   "test": {
