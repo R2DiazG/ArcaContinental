@@ -7,6 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="./css/index.css">
   <link href="bootstrap-5.3.0-alpha1-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Estilo para ocultar los textos */
+    .hidden {
+      display: none;
+    }
+  </style>
+
   <!-- Impormap for bootstrap -->
   <script type="importmap">
     {
@@ -17,21 +25,171 @@
     }
   </script>
 
-  <!--Scripts-->
-  <script type="module">
-    import * as bootstrap from 'bootstrap'
+  <!--CSS de paginación-->
+  <link href="DataTables/datatables.min.css" rel="stylesheet" />
 
-    function showtoast() {
-      // Se muestra el toast de simbología
-      const toastLiveExample = document.getElementById('liveToast')
-      const toast = new bootstrap.Toast(toastLiveExample)
-      toast.show()
+  <script src="javascript/jQuery/jquery-3.6.4.js"></script>
+
+  <script src="DataTables/datatables.min.js"></script>
+
+  <script type="module" src="./javascript/inventory_table.js"></script>
+
+  <script type="text/javascript">
+    const API_URL = 'http://localhost:8010/api/';
+    // Funcion para eliminar la relacion entre el layout y la produccion, recibe como parametro elnoItem
+    // antes de borrar se pidio confirmacion al usuario
+    function deleteProductLocation(noItem) {
+      var confirmacion = confirm("¿Está seguro de eliminar el producto " + noItem + "?");
+      if (confirmacion) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', API_URL + 'eliminar', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({ noItem: noItem }));
+        xhr.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            var tr = document.getElementById('tr_' + noItem);
+            tr.parentNode.removeChild(tr);
+            window.alert("Producto eliminado");
+          }
+        }
+      }
     }
-    showtoast();
+    //Funcion para cuando el usuario de click en el boton de editar, recibe como parametro el noItem
+    //dentro de los td de la fila se inserta un input para que el usuario pueda editar la solamente la ubicacion
+    //y se cambia el boton de editar por un boton de guardar
+    var oldValue = '';
+    function editProductLocation(noItem) {
+      var td = document.getElementById('td2_' + noItem);
+      //guardamos el valor del td2 por si el usuario cancela la edicion
+      oldValue = td.innerText;
+      //insertamos un input en el td2
+      td.innerHTML = '<input type="text" id="input_' + noItem + '" value="' + td.innerText + '">';
+      //obtenemos el td7 donde estan los botones de editar, eliminar y ver
+      var td7 = document.getElementById('td7_' + noItem);
+      // ocultamos los botones
+      td7.children[0].style.display = 'none';
+      td7.children[1].style.display = 'none';
+      td7.children[2].style.display = 'none';
+      // mostramos los botones de guardar y cancelar
+      td7.children[3].style.display = 'inline';
+      td7.children[4].style.display = 'inline';
+    }
+    //Funcion para cuando el usuario de click en el boton de cancelar, recibe como parametro el noItem
+    //dentro de los td de la fila se inserta el valor original de la ubicacion
+    //y se cambia el boton de guardar por un boton de editar
+    function cancelEditProductLocation(noItem) {
+      // obtenemos el td2 donde esta el input
+      var td = document.getElementById('td2_' + noItem);
+      // insertamos el valor original del td2
+      td.innerText = oldValue;
+      //obtenemos el td7 donde estan los botones de editar, eliminar y ver
+      var td7 = document.getElementById('td7_' + noItem);
+      // ocultamos los botones de guardar y cancelar
+      td7.children[3].style.display = 'none';
+      td7.children[4].style.display = 'none';
+      // mostramos los botones de editar y eliminar
+      td7.children[0].style.display = 'inline';
+      td7.children[1].style.display = 'inline';
+      td7.children[2].style.display = 'inline';
+    }
+    //Funcion para cuando el usuario de click en el boton de guardar, recibe como parametro el noItem
+    //dentro de los td de la fila se inserta el nuevo valor de la ubicacion
+    //y se cambia el boton de guardar por un boton de editar
+    function saveProductLocation(noItem) {
+      var td = document.getElementById('td2_' + noItem);
+      var input = document.getElementById('input_' + noItem);
+      //Si el input esta vacio se muestra un mensaje de error
+      //INPUT VACIO
+      if (input.value == '') {
+        window.alert("El campo de ubicación no puede estar vacío");
+        // Se comprueba que el valor del input sea diferente al valor original
+        //INPUT DIFERENTE AL ORIGINAL
+      } else if (input.value != oldValue) {
+        // Se consulta la API para revisar si la ubicacion existe en el layout
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', API_URL + 'layout/' + input.value, true);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            // Si la ubicacion existe se actualiza el valor en la base de datos
+            // UBICACION EXISTE
+            if (this.response.length != 2) { //2 es el tamaño de un array vacio
+              // Se consulta la API para saber si la ubicacion esta ocupada
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', API_URL + 'layout_disponibility/' + input.value, true);
+              xhr.send();
+              xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                  // Si la ubicacion esta ocupada se muestra un mensaje de error
+                  // UBICACION OCUPADA
+                  if (this.response.length != 2) {
+                    window.alert("La ubicación ya está ocupada por el producto " + this.responseText[0].ITEM_NO);
+                    // Si la ubicacion no esta ocupada se actualiza el valor en la base de datos
+                    // UBICACION LIBRE:
+                  } else {
+                    //Se hace una peticion PUT para actualizar la ubicacion
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('PUT', API_URL + 'editar', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    let data = `{ "noItem": ` + noItem + `, "newLocation": "` + input.value + `" } `;
+                    xhr.send(data);
+                    xhr.onreadystatechange = function () {
+                      if (this.readyState == 4 && this.status == 200) {
+                        td.innerText = input.value;
+                        //obtenemos el td7 donde estan los botones de editar y eliminar
+                        var td7 = document.getElementById('td7_' + noItem);
+                        // ocultamos los botones de guardar y cancelar|
+                        td7.children[3].style.display = 'none';
+                        td7.children[4].style.display = 'none';
+
+                        // mostramos los botones de editar y eliminar
+                        td7.children[0].style.display = 'inline';
+                        td7.children[1].style.display = 'inline';
+                        td7.children[2].style.display = 'inline';
+
+                        // Recargar la página tras mostrar el mensaje de éxito y actualizar la ubicación
+                        window.alert("Producto actualizado");
+                        view3dProductLocation(noItem);
+                      }
+                    }
+                  }
+                }
+              }
+            } else {
+              window.alert("La ubicación no existe en el layout");
+            }
+          }
+        }
+      } else {
+        alert("No se ha realizado ningún cambio");
+      }
+    }
+    //Funcion para cuando el usuario de click en el boton de ver en 3D, recibe como parametro el noItem
+    //Se manda el noItem a la pagina de 3D a trvés de cookies
+    function view3dProductLocation(noItem) {
+      document.cookie = "noItem=" + noItem;
+      window.location.href = "./index.html";
+    }
   </script>
 
   <!-- Importación de modulo de visualización 3D -->
   <script type="module" src="./javascript/visualizer.js"></script>
+
+  <script>
+    /* // Comprueba si existe el param "id" en la URL
+    function getParamId() {
+      const token_id = "m4AKPGYRvOCRBG9HIqesFiiG3XpJIErhSiKWWYzFq18d5QmLxR5ysiO05EJuH9Qg";
+
+      var url_string = window.location.href;
+      var url = new URL(url_string);
+      var id = url.searchParams.get("id_token");
+      if (id != token_id) {
+        // Redirigir al login
+        window.location.href = "/front-end/login?notoken";
+      }
+    }
+    getParamId(); */
+  </script>
 
   <title>3D Viewer - WVT</title>
 </head>
@@ -41,91 +199,108 @@
   <canvas id="c"></canvas>
 
   <!-- Barra de navegación -->
-  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light sticky-top">
+  <nav class="navbar bg-body-tertiary bg-light sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="./index.html">WVT</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <a class="navbar-brand" href="http://localhost:4200/admin/lista?dashboard">WVT</a>
+      <!-- Selectores para filtros por fecha de caducidad proxima, frescura y tipo de producto -->
+      <div>
+        <div class="row">
+          <div class="col-1">
+            <text style="text-align: center;">Filtros:</text>
+          </div>
+          <div class="col-3">
+            <div class="row">
+              <label for="frescuraSelector">Frescura</label>
+            </div>
+            <div class="row">
+              <select id="frescuraSelector" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option value="0">Seleccionar</option>
+                <option value="1">Frescura menor a 7 d&iacute;as</option>
+                <option value="2">Frescura entre 8 a 30 d&iacute;as</option>
+                <option value="3">Frescura entre 30 a 60 d&iacute;as</option>
+                <option value="4">Frescura mayor a 60 d&iacute;as</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="row">
+              <label for="categoriaSelector">Categor&iacute;a</label>
+            </div>
+            <div class="row">
+              <select id="categoriaSelector" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option value="0">Seleccionar</option>
+                <option value="1">Refresco/Gaseosa</option>
+                <option value="2">Aguas Purificadas/Sabores</option>
+                <option value="3">Bebidas fruta/soya/soja</option>
+                <option value="4">Energéticas/Deportivas</option>
+                <option value="5">Tés</option>
+                <option value="6">Vitaminadas</option>
+                <option value="7">Cafés Soluble</option>
+                <option value="8">Leche Entera</option>
+                <option value="9">Yogurt</option>
+                <option value="10">Papas/Harina Papa</option>
+                <option value="11">Nachos/Tortillas</option>
+                <option value="12">Palomitas</option>
+                <option value="13">Cacahuates/Semillas</option>
+                <option value="14">Chicharrones</option>
+                <option value="15">Salsas/Dips</option>
+                <option value="16">Dulces</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="row">
+              <label for="subcategoriaSelector">Subcategoría</label>
+            </div>
+            <div class="row">
+              <select id="subcategoriaSelector" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option value="0">Seleccionar</option>
+              </select>
+            </div>
+          </div>
+          <!--Label y campo de texto para barra de busqueda-->
+          <div class="col-2">
+            <div class="col-1">
+              <text style="text-align: center;">Buscar:</text>
+            </div>
+            <div class="col">
+              <div class="row">
+                <input type="text" id="searchBar" class="form-control form-control-sm"
+                  aria-label=".form-control-sm example" placeholder="Término..." data-bs-toggle="modal"
+                  data-bs-target="#exampleModal" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Barra de busqueda-->
+      </div>
+      <!-- Botón de menú hamburguesa -->
+      <div data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" id="burgerButton">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <!-- Links de navegación -->
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-link" href="./almacenar.html">Almacenar</a>
           <a class="nav-link" href="./intentory_table.html">Productos almacenados</a>
           <a class="nav-link" href="./settings.html">Configurar</a>
         </div>
-        <!-- Selectores para filtros por fecha de caducidad proxima, frescura y tipo de producto -->
-        <div>
-          <div class="row">
-            <div class="col-1">
-              <text style="text-align: center;">Filtros:</text>
-            </div>
-            <div class="col-3">
-              <div class="row">
-                <label for="frescuraSelector">Frescura</label>
-              </div>
-              <div class="row">
-                <select id="frescuraSelector" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                  <option value="0">Seleccionar</option>
-                  <option value="1">Frescura menor a 7 d&iacute;as</option>
-                  <option value="2">Frescura entre 8 a 30 d&iacute;as</option>
-                  <option value="3">Frescura entre 30 a 60 d&iacute;as</option>
-                  <option value="4">Frescura mayor a 60 d&iacute;as</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="row">
-                <label for="categoriaSelector">categor&iacute;a</label>
-              </div>
-              <div class="row">
-                <select id="categoriaSelector" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                  <option value="0">Seleccionar</option>
-                  <option value="1">Refresco/Gaseosa</option>
-                  <option value="2">Aguas Purificadas/Sabores</option>
-                  <option value="3">Bebidas fruta/soya/soja</option>
-                  <option value="4">Energéticas/Deportivas</option>
-                  <option value="5">Tés</option>
-                  <option value="6">Vitaminadas</option>
-                  <option value="7">Cafés Soluble</option>
-                  <option value="8">Leche Entera</option>
-                  <option value="9">Yogurt</option>
-                  <option value="10">Papas/Harina Papa</option>
-                  <option value="11">Nachos/Tortillas</option>
-                  <option value="12">Palomitas</option>
-                  <option value="13">Cacahuates/Semillas</option>
-                  <option value="14">Chicharrones</option>
-                  <option value="15">Salsas/Dips</option>
-                  <option value="16">Dulces</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="row">
-                <label for="caducidadSelector">Subcategoría</label>
-              </div>
-              <div class="row">
-                <select id="subcategoriaSelector" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                  <option value="0">Seleccionar</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-      <!-- Botón para mostrar el panel de información -->
-      <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-        aria-controls="offcanvasScrolling">
-        <img src="./images/dock_to_right.png" alt="Icono de panel de información" height="20px" width="20px">
-        Panel de informaci&oacute;n</button>
     </div>
   </nav>
   <!-- Offcanvas -->
-  <div class="offcanvas offcanvas-start show" style="margin-top: 71px;" data-bs-scroll="true" data-bs-backdrop="false"
-    tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="sticky-top offcanvas offcanvas-start show" style="margin-top: 0; max-width: 315px; height: 578px;"
+    data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling"
+    aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Informaci&oacute;n del paquete </h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <div data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
     </div>
     <div class="offcanvas-body" id="texto-offcanvas">
       <p>Intenta apuntar a un objeto en el mapa para ver sus datos aqu&iacute;.</p>
@@ -133,45 +308,45 @@
   </div>
 
   <!--Toast de selección de filtro ya sea por categoría o frescura-->
-
-  <div class="col-2" style="margin: auto;">
+  <div class="col-2" style="margin: auto; ">
     <div class="position-absolute bottom-0" id="toastFilterPlacement" style="margin: auto;">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <button class="nav-link active" aria-current="page" id="frescura-tab">Frescura</button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" aria-current="page" id="categoria-tab">Categor&iacute;a</button>
-          </li>
-        </ul>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <button class="nav-link active" aria-current="page" id="frescura-tab">Frescura</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" aria-current="page" id="categoria-tab">Categor&iacute;a</button>
+        </li>
+      </ul>
     </div>
   </div>
 
   <!--Symbols Toast-->
   <div class="toast-container position-absolute p-3 bottom-0 end-0" id="toastPlacement">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false"
+      style="width: 50px;">
       <div class="toast-header">
         <img src="./images/info_icon.png" class="rounded me-2" alt="Icono de caja de información" height="20px"
           width="20px">
-        <strong class="me-auto">Simbología</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        <strong class="me-auto hidden">Simbología</strong>
+        <button type="button" class="btn-close hidden" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
         <div id="simbology">
           <div class="row">
             <div class="col-2">
-              <div class="color-symbology" style="background-color: #adff99;"></div>
+              <div class="color-symbology" style="background-color: #0e8c03;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura menor a 7 d&iacute;as.</p>
+              <p class="hidden">Frescura menor a 7 d&iacute;as.</p>
             </div>
           </div>
           <div class="row">
             <div class="col-2">
-              <div class="color-symbology" style="background-color: #e8f558;"></div>
+              <div class="color-symbology" style="background-color: #8c7d03;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura entre 8 a 30 d&iacute;as.</p>
+              <p class="hidden">Frescura entre 8 a 30 d&iacute;as.</p>
             </div>
           </div>
           <div class="row">
@@ -179,7 +354,7 @@
               <div class="color-symbology" style="background-color: #fa6e02;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura entre 31 a 60 d&iacute;as.</p>
+              <p class="hidden">Frescura entre 31 a 60 d&iacute;as.</p>
             </div>
           </div>
           <div class="row">
@@ -187,7 +362,7 @@
               <div class="color-symbology" style="background-color: #de0404;"></div>
             </div>
             <div class="col-10">
-              <p>Frescura mayor a 61 d&iacute;as.</p>
+              <p class="hidden">Frescura mayor a 61 d&iacute;as.</p>
             </div>
           </div>
         </div>
@@ -195,13 +370,103 @@
     </div>
   </div>
   <div class="offCanvasTrigger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-  aria-controls="offcanvasScrolling"
-  ></div>
+    aria-controls="offcanvasScrolling">
+    <div class="offCanvasTrigger" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"></div>
+  </div>
+  <!--Modal de bootstrap-->
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Lista de productos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!--Incrustar aquí el contenido de inventory_table.html-->
+          <div class="row">
+            <div class="col" style="margin-bottom: 40px;">
+              <!-- Tabla de productos con No item, Ubicación, Descripción, X, Y, Z -->
+              <table class="table table-striped-columns" id="inventory_table_registry">
+                <thead>
+                  <tr>
+                    <th scope="col">No item</th>
+                    <th scope="col">Ubicación</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Tamaño</th>
+                    <th scope="col">Fabricaci&oacute;n</th>
+                    <th scope="col">caducidad</th>
+                    <th scope="col mr-0">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="inventory_table">
+                  <!-- inventory_table.js inserta: 
+                            <tr>
+                            <th scope="row">1</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>
+                                <button type="button" class="btn btn-primary">Editar</button>
+                                <button type="button" class="btn btn-danger">Eliminar</button>
+                                <button type="button" class="btn btn-danger">Ver en 3D</button>
+                            </td>
+                        </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var simbology = document.getElementById("liveToast");
+      var paragraphs = simbology.getElementsByTagName("p");
 
+      simbology.addEventListener("mouseover", function () {
+        for (var i = 0; i < paragraphs.length; i++) {
+          paragraphs[i].classList.remove("hidden");
+        }
+        // Ajustar el width del toast a 300px
+        var toast = document.getElementById("liveToast");
+        toast.style.width = "300px";
+
+        // Mostrar el elemento strong y el botón de cerrar
+        var strong = document.querySelector("#liveToast strong");
+        strong.classList.remove("hidden");
+        var button = document.querySelector("#liveToast button");
+        button.classList.remove("hidden");
+
+      });
+
+      simbology.addEventListener("mouseout", function () {
+        for (var i = 0; i < paragraphs.length; i++) {
+          paragraphs[i].classList.add("hidden");
+        }
+        // Ajustar el width del toast a 50px
+        var toast = document.getElementById("liveToast");
+        toast.style.width = "50px";
+
+        // Ocultar el elemento strong y el botón de cerrar
+        var strong = document.querySelector("#liveToast strong");
+        strong.classList.add("hidden");
+        var button = document.querySelector("#liveToast button");
+        button.classList.add("hidden");
+      });
+    });
+  </script>
   <script src="bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

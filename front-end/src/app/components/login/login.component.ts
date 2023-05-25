@@ -17,12 +17,10 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    /* console.log(this.usuario); */
+    // console.log("this.usuario:")
+    // console.log(this.usuario);
     this._serviceLogin.login(this.usuario)
     .then((response: any) => {
-      console.log("LOGIN COMPONENT 25  ")
-      console.log(this.usuario);
-      console.log("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\n Return:");
       console.log(response);
       if(response === undefined){
         console.log("ERROR AL INICIAR SESION");

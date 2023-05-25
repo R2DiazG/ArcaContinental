@@ -2,6 +2,7 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { Animations } from 'src/app/animations/animations';
+const VISUALIZER_URL = 'http://127.0.0.1:5500/html/index.html?id_token=m4AKPGYRvOCRBG9HIqesFiiG3XpJIErhSiKWWYzFq18d5QmLxR5ysiO05EJuH9Qg'
 
 @Component({
   selector: 'app-admin',
@@ -47,5 +48,10 @@ export class AdminComponent implements CanActivate, OnInit {
   logout() {
     this._auth.logOut();
     this._router.navigate(['/login']);
+  }
+  redirigirASistemaExterno() {
+    //redirigir a la pagina de inicio de sesion
+    window.location.href = VISUALIZER_URL;
+
   }
 }

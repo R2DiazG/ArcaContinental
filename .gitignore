@@ -1348,3 +1348,7 @@ front-end/.angular/cache/15.2.5/babel-webpack/d32e1058dc0f2f598d2fc0ddfab19c27a3
 front-end/.angular/cache/15.2.5/babel-webpack/d6777d0658a81992294378b1c832fb156f810d788c8fdb2caa7d289c102d08ce.json
 front-end/.angular/cache/15.2.5/babel-webpack/faae3259336dee3578fa0d345df4f7ef4f7ed76b1c58d8fbdd3770f19999b35e.json
 front-end/.angular/cache/15.2.5/babel-webpack/ffd5147c8b3119aa4dcb2ef8e13b26a753e989e65d84d8d853cdde37f923d14b.json
+front-end/.angular/cache/15.2.5/babel-webpack/938fd73f1f08d117e8222d5f1f53d883ac0febe7cc982e9234a1299367580d0e.json
+*.json
+*.pack
+*.old

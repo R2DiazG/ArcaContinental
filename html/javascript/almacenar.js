@@ -7,7 +7,7 @@
 // FECHA DE MODIFICACIÓN:   2023-01-28
 /* ******************************************************************* */
 //Se crea una constante para la API REST
-const API_URL = 'http://localhost:3001/api/';
+const API_URL = 'http://localhost:8010/api/'; 
 //funcion para cambiar el boton registrar por uno desactivado hasta que los 
 //campos noItem y idLocation esten llenos
 function desactivarBoton() {
