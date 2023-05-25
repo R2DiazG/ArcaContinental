@@ -28,7 +28,6 @@ router.get('/startup', (req, res) => {
 router.get('/productslocation', (req, res) => {
     //se utiliza el stored procedure productslocation en el query
     db.query('SELECT production_layout."ITEM_NO", production_layout."LOCATION", layout."WIDTH", layout."HEIGHT", layout."DEPTH", layout."X", layout."Y", layout."Z", production."ITEM_DESCRIPTION", production."MANUFACTURING_DATE", production."EXPIRATION", production."CATEGORY", production."SIZE" FROM production_layout, layout, production WHERE layout."LOCATION"=production_layout."LOCATION" AND production_layout."ITEM_NO"=production."ITEM_NO"', (err, result) => {
-        console.log(result.rows);
         if (err) {
             console.log(err);
         } else {
