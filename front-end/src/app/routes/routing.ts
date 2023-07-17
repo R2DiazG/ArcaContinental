@@ -12,6 +12,7 @@ import { QrGuardiaComponent } from "../components/qr-guardia/qr-guardia.componen
 import { CruduserComponent } from "../components/cruduser/cruduser.component";
 import { ListaEmpleadosComponent } from "../components/lista-empleados/lista-empleados.component";
 import { PreregistroComponent } from "../components/preregistro/preregistro.component";
+import { MainVisualizerComponent } from "../components/main-visualizer/main-visualizer.component";
 const app_routes:Routes = [
     { path: 'home/:num', component: HomeComponent },
     { path: 'admin', component: AdminComponent, canActivate: [GuardService], 
@@ -33,6 +34,7 @@ const app_routes:Routes = [
             {path: 'registro', component: FormsVisitasComponent}
         ]
     },
+    { path: 'mainv', component: MainVisualizerComponent},
     { path: 'login', component: LoginComponent },
     { path: '**', pathMatch: 'full', redirectTo: ''}
 ]

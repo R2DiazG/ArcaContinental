@@ -22,6 +22,7 @@ import { QrGuardiaComponent } from './components/qr-guardia/qr-guardia.component
 import { CruduserComponent } from './components/cruduser/cruduser.component';
 import { ListaEmpleadosComponent } from './components/lista-empleados/lista-empleados.component';
 import { PreregistroComponent } from './components/preregistro/preregistro.component';
+import { MainVisualizerComponent } from './components/main-visualizer/main-visualizer.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PreregistroComponent } from './components/preregistro/preregistro.compo
     QrGuardiaComponent,
     CruduserComponent,
     ListaEmpleadosComponent,
-    PreregistroComponent
+    PreregistroComponent,
+    MainVisualizerComponent
   ],
   imports: [
     AppRouting,

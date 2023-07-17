@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "wvt", 
-    "password": "666wvt",
+    "password": "666",
     "database": "wvt_db",
-    "host": "148.238.2.83",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
